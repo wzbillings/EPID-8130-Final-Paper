@@ -1,0 +1,84 @@
+---
+title: "Infectivity of human norovirus in live challenge trials: a systematic review and meta-analysis"
+author: "W. Zane Billings"
+date: "2021-12-13"
+site: bookdown::bookdown_site
+output:
+  bookdown::word_document2: 
+    toc: false
+    css: style.css
+bibliography: "http://127.0.0.1:23119/better-bibtex/export/collection?/1/Class//EPID%208130%20Final%20Project.biblatex"
+csl: jama.csl
+abstract: |
+  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We also perform a meta regression on inoculum dose. We find that [EXPLAIN RESULTS].
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+# Loading required packages
+library(flextable)
+```
+
+# Introduction
+
+Human norovirus (NoV) is a small, round-structured, unenveloped, positive-sense single-strand RNA virus with a linear, unsegmented genome, belonging to the caliciviridae family. NoV was first isolated in .
+
+# Methods
+
+Short intro here
+
+## Literature search
+
+We searched two databases to find literature: PubMed [(https://www.ncbi.nlm.nih.gov/pubmed/)](https://www.ncbi.nlm.nih.gov/pubmed/) and Web of Science [(https://www.webofscience.com/)](https://www.webofscience.com/). The search terms, included in Table \@ref(tab:SearchTerms), contained terms for norovirus,  
+
+```{r SearchTerms}
+STtable <- data.frame(
+  database = c("PubMed", "WoS"),
+  search = c(
+    paste(
+      '("norovirus" [MeSH Major Topic]) AND',
+      '("norovirus" OR "Norwalk virus" OR "snow mountain virus" OR',
+      '\t "Norwalk agent" OR "nonbacterial gastroenteritis" OR',
+      '\t "viral gastroenteritis" [Title/Abstract]) AND',
+      '(human OR challenge OR experimental OR infect* OR volunteer OR',
+      '\t vaccin* OR adult OR clinical OR randomized OR',
+      '\t individual [Title/Abstract]) NOT',
+      '("mouse" or "murine" or "mice" [Title])',
+      sep = "\n"
+    ),
+    paste(
+      '(TS=("norovirus" OR "Norwalk virus" OR "snow mountain virus" OR',
+      '\t "Norwalk agent" OR "nonbacterial gastroenteritis" OR',
+      '\t "viral gastroenteritis")) AND',
+      '(TS=(human OR man OR adult OR volunteer)) AND',
+      '(TS=(volunteer OR challenge OR experimental OR infect* OR vaccin* OR',
+      '\t inoculum))',
+      sep = "\n"
+    )
+  )
+) |>
+  flextable::flextable() |>
+  flextable::set_header_labels(search = "search strategy") |>
+  flextable::theme_booktabs(bold_header = TRUE) |>
+  flextable::align(j = 1, align = "right", part = "all") |>
+  flextable::align(j = 2, align = "left", part = "all") |>
+  flextable::set_caption("Search strings for the two databases searched.") |>
+  flextable::autofit() |>
+  flextable::set_table_properties(layout = "autofit")
+
+STtable
+```
+
+
+## Data abstraction
+
+## Statistical methods
+
+# Results
+
+# Discussion
+
+# References

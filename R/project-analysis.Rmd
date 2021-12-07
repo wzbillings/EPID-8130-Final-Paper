@@ -1,0 +1,558 @@
+---
+title: "EPID 8130 Project Analysis"
+author: "Zane"
+date: "11/27/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+For my final project for EPID 8130, I conducted a systematic review of norovirus challenge studies. After the standard systematic review steps, I then removed studies which contained unusable data as well as studies that referenced previously-completed challenge cohorts. In this document I will conduct a meta-analysis of the proportion of challenge participents who were infected, and examine influences of the summary measure.
+
+First, I will load necessary packages--I think it is best practice to always do this at the top of the script. I'll also load the data and set the theme for the forest plots here.
+
+```{r dependencies}
+# Load packages
+library(here)
+library(dplyr)
+library(ggplot2)
+library(meta)
+library(metafor)
+library(dmetar)
+library(magick)
+library(zlib)
+library(janitor)
+
+# Read in the data
+dat <- read.csv(here::here("data", "abstracted-data.csv")) %>%
+  janitor::clean_names() %>%
+  mutate(study = paste(first_author, year_published))
+
+# Change forest plot formatting
+zlib::quiet(settings.meta("jama"))
+
+save_base_plot <- function(.data, pth, FUN = plot,
+                           w = 3200, h = 1800, r = 300, ...) {
+  # Create graphics device
+  png(file = pth, width = w, height = h, res = r)
+  # Actually generate forest plot
+  FUN(.data, ...)
+  # Turn off graphics device (quietly)
+  zlib::quiet(dev.off())
+  # Trim whitespace
+  magick::image_read(pth) |>
+    magick::image_trim() |>
+    magick::image_write(path = pth)
+}
+
+# Set ggplot theme
+theme_set(theme_bw() + theme(axis.text = element_text(color = "black")))
+```
+
+# Proportion infected
+
+In the data we have two potential outcomes--the proportion of challenge participents who had confirmed norovirus infection, and the proportion who displayed clinical illness (acute gastroenteritis). For a few of the older studies, infection was only measured with clinical symptoms.
+
+The first outcome I'll do the meta analysis of is the proportion infected.
+
+## Overall meta analysis
+
+For the first analysis, I'll aggregate all of the data by study and do a meta analysis that includes every study regardless of any stratifying factors. JUSTIFY MODEL FITTING CHOICES HERE
+
+```{r all studies overall}
+all_studies_df <- dat %>%
+  group_by(study) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published)
+  )
+
+all_studies_meta <- all_studies_df %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    title = "Proportion of challenge participants with confirmed infection"
+  )
+
+all_studies_meta
+```
+
+Let's view a visual summary of the estimates for each study, along with the overall estimates.
+
+```{r all studies forest plot}
+save_base_plot(
+  all_studies_meta,
+  here::here("figures", "all-studies-forest.png"),
+  # I hate this solution but can't figure out a better way
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)}
+)
+
+knitr::include_graphics(here::here("figures", "all-studies-forest.png"))
+```
+
+Let's make the drapery plot also which could be fun.
+
+```{r all studies drapery plot}
+save_base_plot(
+  all_studies_meta,
+  here::here("figures", "all-studies-drapery.png"),
+  FUN = meta::drapery,
+  labels = "studlab",
+  type = "pval",
+  legend = FALSE,
+  fixed = FALSE
+)
+knitr::include_graphics(here::here("figures", "all-studies-drapery.png"))
+```
+
+Huh. maybe not so fun. Let's talk about the forest plot again.
+
+We can see that there is quite a lot of heterogeneity among the different studies. Obviously we should use the random effects model here, but even that has $I^2 = 80\%$. However, we can see that some studies are more similar than others, so my next step will be doing various types of heterogeneity analysis to see if we can find any meaningful subgroups. I'll also do manual subgroup analysis later to see if that matches with what we find from the influence analysis.
+
+First, let's do simple outlier detection: we'll remove any studies whose CIs don't overlap with the pooled (random effects) estimate. This is likely not a good way to draw conclusions, but it can help us get a handle on what causes the most heterogeneity. 
+
+```{r all studies simple outlier detection}
+# simple outlier detection
+simple_outliers <- find.outliers(all_studies_meta)
+save_base_plot(
+  simple_outliers$m.random,
+  here::here("figures", "all-studies-SO.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)}
+)
+simple_outliers
+knitr::include_graphics(here::here("figures", "all-studies-SO.png"))
+```
+
+The studies chosen as outliers (using the random effects model) are: `r paste(simple_outliers$out.study.random, collapse = ", ")`. (There isn't a conjunction here because I automatically collapsed that list as inline R code, sorry.) Those all appear to be more modern studies, we'll look at what they might have in common in a bit.
+
+Next let's do a leave-one-out (LOO) analysis.
+
+```{r all studies LOO analysis}
+# LOO analysis
+all_studies_inf <- dmetar::InfluenceAnalysis(all_studies_meta, random = TRUE)
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-panel.png"),
+  plot,
+  which = "all"
+)
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-baujat.png"),
+  plot,
+  which = "baujat"
+)
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-influence.png"),
+  plot,
+  which = "influence"
+)
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-es.png"),
+  plot,
+  which = "es"
+)
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-i2.png"),
+  plot,
+  which = "I2"
+)
+knitr::include_graphics(here::here("figures", "all-studies-loo-panel.png"))
+```
+
+This is a lot of output, and it doesn't identify any clear outliers. But based mainly on the Baujat plot (upper left hand plot), we can see that the best candidate outliers are probably Bernstein 2015, Teunis 2008, and Madore 1990. I choose Madore 1990 as a candidate outlier due to the diagnostic plots in the upper right hand plot. Based on the two LOO forest plots, none of the individual studies likely has a super strong effect, maybe a L2O analysis (or more) would be better.
+
+Good thing we can do something similar. Next I'll do a GOSH analysis, but I don't remember what that stands for. We'll fit 1,000,000 models with randomly chosen predictor subsets and plot the heterogeneity vs. effect size measurement. Due to support issues with the `metafor` package, this model is fitted using a different algorithm but the trends should be similar.
+
+```{r all studies GOSH analysis, cache = TRUE}
+# GOSH plot
+## Convert to metafor
+all_studies_mf <- 
+  metafor::rma(
+    xi = all_studies_meta$event,
+    ni = all_studies_meta$n,
+    method = all_studies_meta$method.tau,
+    slab = all_studies_meta$studlab,
+    measure = "PLO"
+  )
+
+# Not exactly the same but very close and I can't figure out what's wrong.
+# Should be fine to try GOSH anyways though.
+
+# GOSH analysis
+all_studies_gosh <- gosh(all_studies_mf,
+                         parallel = "snow",
+                         ncpus = 30)
+```
+
+Let's show the GOSH plot.
+
+```{r}
+save_base_plot(
+  all_studies_gosh,
+  here::here("figures", "all-studies-GOSH.png"),
+  FUN = plot,
+  alpha = 0.01,
+  xlim = c(-0.5, 1.5),
+  ylim = c(0,100)
+)
+knitr::include_graphics(here::here("figures", "all-studies-GOSH.png"))
+```
+
+There are a few interesting patterns in the GOSH analysis. Most notably, the streak of subsets which appear to have heterogeneity 0.
+
+```{r all studies GOSH diagnostics}
+# Gosh diagnostics
+all_studies_gosh_diag <- gosh.diagnostics(
+  all_studies_gosh,
+  km.params = list(centers = 2),
+  db.params = list(MinPts = 15, eps = 0.25)
+)
+
+save_base_plot(
+  all_studies_gosh_diag,
+  here::here("figures", "gosh-diag-outliers.png"),
+  FUN = function(x) {
+    with(
+      x,
+      gridExtra::grid.arrange(
+        plot.study5.removed,
+        plot.study11.removed,
+        plot.study14.removed,
+        plot.study19.removed
+      )
+    )
+  }
+)
+
+save_base_plot(
+  all_studies_gosh_diag,
+  here::here("figures", "gosh-diag-clusters.png"),
+  FUN = function(x) {
+    with(
+      x,
+      gridExtra::grid.arrange(
+        km.plot,
+        db.plot,
+        gmm.plot
+      )
+    )
+  }
+)
+```
+
+The GOSH diagnostics appear to identify 4 outlier studies. Out of simple method, LOO analysis, and GOSH diagnostics, 5 studies were each identified by at least 2 of the methods. So we'll exclude those.
+
+```{r}
+no_outliers <- update.meta(all_studies_meta, exclude = c(5, 11, 12, 14, 19))
+save_base_plot(
+  no_outliers,
+  here::here("figures", "all-studies-NO.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)}
+)
+no_outliers
+knitr::include_graphics(here::here("figures", "all-studies-NO.png"))
+```
+
+This decreases the heterogeneity, but there seems to be no real pattern for why these studies are outliers.
+
+Subgroup analysis for FUT2+ only vs. uncontrolled.
+
+```{r}
+fut2_df <- dat %>%
+  filter(secretor_status != "FUT2-") %>%
+  group_by(study, FUT2 = secretor_status) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published),
+    .groups = "drop"
+  )
+
+fut2_meta <- fut2_df %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    title = "Proportion infected by FUT2 control",
+    subgroup = FUT2
+  )
+
+save_base_plot(
+  fut2_meta,
+  here::here("figures", "fut2-forest.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  h = 2400
+)
+```
+
+Subgroup analysis for genogroup.
+
+```{r}
+gg_df <- dat %>%
+  group_by(study, genotype = genogroup) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published),
+    .groups = "drop"
+  )
+
+gg_meta <- gg_df %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    title = "Proportion infected by FUT2 control",
+    subgroup = genotype
+  )
+
+save_base_plot(
+  gg_meta,
+  here::here("figures", "gg-forest.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  h = 3200
+)
+```
+
+Subgroup analysis for genogroup big part.
+
+```{r}
+gg2_df <- dat %>%
+  mutate(
+    genogroup = case_when(
+      genogroup == "Unknown" ~ "Unknown",
+      startsWith(genogroup, "GI.") ~ "G1",
+      startsWith(genogroup, "GII.") ~ "G2",
+      TRUE ~ genogroup
+    )
+  ) %>%
+  group_by(study, genogroup) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published),
+    .groups = "drop"
+  )
+
+gg2_meta <- gg2_df %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    subgroup = genogroup
+  )
+
+save_base_plot(
+  gg2_meta,
+  here::here("figures", "gg2-forest.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  h = 2800
+)
+```
+
+RIsk of bias with all three groups
+
+```{r all studies overall}
+rob1_df <- dat %>%
+  group_by(study, risk_of_bias) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published),
+    .groups = "drop"
+  )
+
+rob1_meta <- rob1_df %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    subgroup = risk_of_bias
+  )
+
+save_base_plot(
+  rob1_meta,
+  here::here("figures", "rob1-forest.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  h = 2800
+)
+```
+
+```{r}
+rob2_df <- dat %>%
+  mutate(
+    high_rob = (risk_of_bias == "H")
+  ) %>%
+  group_by(study, high_rob) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published),
+    .groups = "drop"
+  )
+
+rob2_meta <- rob2_df %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    subgroup = high_rob
+  )
+
+save_base_plot(
+  rob2_meta,
+  here::here("figures", "rob2-forest.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  h = 2800
+)
+```
+
+risk of bias plot.
+
+```{r}
+library(robvis)
+rob_data_orig <- read.csv(here::here("data", "study-quality.csv"))
+rob_data <- rob_data_orig %>%
+  select(-EndNote.record..) %>%
+  mutate(study = paste(First.author, Year.published),
+         .after = Year.published, .keep = "unused") %>%
+  mutate(across(!study, ~case_when(
+    .x %in% c("L", "Y") ~ "Low",
+    .x %in% c("M", "U") ~ "Some concerns",
+    .x %in% c("H", "N") ~ "High"
+  )))
+rob_data$W <- (all_studies_df$number_challenged)
+rob_summary(rob_data, tool = "ROB1", colour = "colourblind")
+ggsave(here::here("figures", "rob-summary.png"), width = 8, height = 9)
+rob_traffic_light(rob_data, tool = "ROB1", colour = "colourblind", psize = 6) +
+  theme(strip.text.y.left = element_text(size = 10, angle = 0),
+        axis.title.y.left = element_blank())
+ggsave(here::here("figures", "rob-traffic-light.png"), width = 8, height = 9)
+```
+
+
+
+Cumulative meta analysis based on year of publication.
+
+```{r}
+year_cum <- metacum(all_studies_meta, "random", year)
+year_cum
+save_base_plot(
+  year_cum,
+  here::here("figures", "cumulative-forest.png"),
+  FUN = function(x, ...) {meta::forest.meta(x, ...)},
+  h = 2800
+)
+```
+
+Meta regression
+
+```{r}
+dat_dose <- dat %>%
+  filter(dose_gec != "Unknown") %>%
+  mutate(dose = as.numeric(dose_gec)) %>%
+  group_by(study, log_dose = log10(dose)) %>%
+  summarize(
+    across(starts_with("number"), sum),
+    year = min(year_published),
+    .groups = "drop"
+  )
+
+dat_dose_es <-
+  escalc(
+    measure = "PLO",
+    xi = number_infected,
+    ni = number_challenged,
+    slab = study,
+    data = dat_dose
+  )
+
+meta_dose <- dat_dose %>%
+  meta::metaprop(
+    event = number_infected,
+    n = number_challenged,
+    studlab = study,
+    data = .,
+    method = "GLMM",
+    sm = "PLOGIT",
+    method.tau = "ML",
+    hakn = TRUE,
+    prediction = TRUE,
+    title = "Proportion of challenge participants by dose"
+  )
+
+dose_reg <- metareg(meta_dose, ~log_dose)
+bubble(dose_reg)
+points(xs, ys, cex = ws)
+save_base_plot(
+  dose_reg,
+  here::here("figures", "cumulative-forest.png"),
+  FUN = function(x, ...) {
+    
+  },
+)
+```
+
+Publication bias
+
+```{r}
+save_base_plot(
+  all_studies_meta,
+  here::here("figures", "contour-funnel.png"),
+  FUN = function(x, ...) {
+    funnel(x, fixed = FALSE,
+           contour.levels = c(0.9, 0.95, 0.99),
+           col.contour = c("gray75", "gray85", "gray95"))
+    legend(x = "topright",
+           legend = c("p < 0.1", "p < 0.05", "p < 0.01"),
+           fill = c("gray75", "gray85", "gray95"))
+  },
+)
+```
+
+```{r}
+egger <- metabias(all_studies_meta, method.bias = "Egger")
+```
+

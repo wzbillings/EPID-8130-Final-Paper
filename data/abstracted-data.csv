@@ -1,0 +1,63 @@
+EndNote record #,First author,Year published,Secretor Status,Reported strain,Genogroup,Dose (GEC),Criteria for Infection,Criteria for Illness,Number challenged,Number infected,Number ill,Risk of Bias
+12706,Agus,1973,Not controlled,"""Norwalk agent""",Unknown,Unknown,illness only,vomiting or diarrhea,7,4,4,M
+12858,Atmar,2011,FUT2+,8FIIa,GI.1,19200,fecal RT-PCR,"Evidence of NV detection plus vomiting, diarrhea, or vomiting + constitutional symptoms",84,62,46,L
+12868,Atmar,2008,FUT2+,8FIIa,GI.1,Unknown,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,16,16,11,H
+12869,Atmar,2014,FUT2+,8FIIa,GI.1,1920000,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,7,6,4,L
+12869,Atmar,2014,FUT2+,8FIIa,GI.1,19200,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,8,7,4,L
+12869,Atmar,2014,FUT2+,8FIIa,GI.1,1920,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,13,7,5,L
+12869,Atmar,2014,FUT2+,8FIIa,GI.1,192,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,13,11,1,L
+12869,Atmar,2014,FUT2-,8FIIa,GI.1,1920000,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,2,0,0,L
+12869,Atmar,2014,FUT2-,8FIIa,GI.1,19200,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,2,0,0,L
+12869,Atmar,2014,FUT2-,8FIIa,GI.1,1920,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,1,0,0,L
+12869,Atmar,2014,FUT2-,8FIIa,GI.1,192,"seroresponse, fecal RT-PCR, or fecal ELISA",Diarrhea or vomiting + constitutional symptoms,3,0,0,L
+13007,Bernstein,2015,FUT2+,GII.4,GII.4,17600000,fecal RT-PCR or seroconversion,"diarrhea, vomiting, or vomiting plus constitutional symptoms",132,57,29,M
+13750,Dolin,1971,Not controlled,Unknown,Unknown,Unknown,illness only,Diarrhea or vomiting,16,10,10,H
+14000,Frenck,2012,FUT2+,GII.4,GII.4,20000000,fecal RT-PCR or seroconversion,Diarrhea or vomiting,23,16,12,L
+14000,Frenck,2012,FUT2-,GII.4,GII.4,20000000,fecal RT-PCR or seroconversion,Diarrhea or vomiting,17,1,1,L
+14201,Gordon,1956,Not controlled,Marcy strain,Unknown,Unknown,illness only,Diarrhea plus at least two other constitutional symptoms,42,31,31,H
+14213,Graham,1994,Not controlled,8FIIa,GI.1,Unknown,seroconversion or fecal ELISA,Diarrhea or vomiting,50,41,28,H
+14906,Keswick,1985,Not controlled,8FIIa,GI.1,Unknown,Seroconversion,Diarrhea,32,19,11,H
+15303,Leon,2011,Not controlled,8FIIb,GI.1,Unknown,stool or vomit RT-PCR,"One symptom, not including fever",44,16,13,L
+15393,Lindesmith,2005,FUT2+,SMV,GII.2,Unknown,stool RT-PCR,NA,12,8,NA,H
+15393,Lindesmith,2005,FUT2-,SMV,GII.2,Unknown,stool RT-PCR,NA,3,1,NA,H
+15394,Lindesmith,2003,FUT2+,Norwalk virus,GI.1,4000000,RT-PCR or serology,NA,13,9,NA,H
+15394,Lindesmith,2003,FUT2+,Norwalk virus,GI.1,40000000,RT-PCR or serology,NA,6,3,NA,H
+15394,Lindesmith,2003,FUT2+,Norwalk virus,GI.1,400000000,RT-PCR or serology,NA,3,2,NA,H
+15394,Lindesmith,2003,FUT2+,Norwalk virus,GI.1,4000000000,RT-PCR or serology,NA,14,7,NA,H
+15394,Lindesmith,2003,FUT2+,Norwalk virus,GI.1,40000000000,RT-PCR or serology,NA,19,13,NA,H
+15394,Lindesmith,2003,FUT2-,Norwalk virus,GI.1,4000000,RT-PCR or serology,NA,6,0,NA,H
+15394,Lindesmith,2003,FUT2-,Norwalk virus,GI.1,40000000,RT-PCR or serology,NA,4,0,NA,H
+15394,Lindesmith,2003,FUT2-,Norwalk virus,GI.1,400000000,RT-PCR or serology,NA,2,0,NA,H
+15394,Lindesmith,2003,FUT2-,Norwalk virus,GI.1,4000000000,RT-PCR or serology,NA,6,0,NA,H
+15394,Lindesmith,2003,FUT2-,Norwalk virus,GI.1,40000000000,RT-PCR or serology,NA,4,0,NA,H
+15577,Madore,1990,Not controlled,Norwalk agent,GI.1,Unknown,4-fold serum increase,Not defined,20,18,16,H
+15577,Madore,1990,Not controlled,Snow mountain agent,GII.2,Unknown,4-fold serum increase,Not defined,20,15,16,H
+15577,Madore,1990,Not controlled,Hawaii agent,GII.1,Unknown,4-fold serum increase,Not defined,21,18,16,H
+15694,Mateo,2020,FUT2+,GI.1,GI.1,360000,stool RT-PCR,"diarrhea, vomiting, or vomiting plus constitutional symptoms",8,5,5,L
+15694,Mateo,2020,FUT2+,GI.1,GI.1,1000000,stool RT-PCR,"diarrhea, vomiting, or vomiting plus constitutional symptoms",8,6,5,L
+16149,Okhuysen,1995,Not controlled,8FIIa,GI.1,Unknown,fecal ELISA,diarrhea or vomiting and constitutional symptoms,72,47,28,H
+16273,Parker,1994,Not controlled,Unknown,Unknown,Unknown,NV IgA,NA,14,11,NA,H
+16835,Seitz,2011,Not controlled,GI.1,GI.1,650000000,IgG seroconversion or fecal RT-PCR,"any clinical symptom (diarrhea, fever, vomiting, nausea, cramps, headache, myalgia, fatigue)",13,10,10,M
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,3.24,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,8,0,0,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,32.4,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,9,0,0,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,324,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,9,3,1,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,3240,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,3,2,1,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,32400,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,8,7,6,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,324000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,7,3,1,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,3240000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,3,2,2,H
+17249,Teunis,2008,FUT2+,8FIIa,GI.1,32400000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,6,5,4,H
+17249,Teunis,2008,FUT2+,8FIIb,GI.1,692000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,8,3,2,H
+17249,Teunis,2008,FUT2+,8FIIb,GI.1,6920000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,18,14,7,H
+17249,Teunis,2008,FUT2+,8FIIb,GI.1,69200000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,1,1,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,3.24,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,2,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,32.4,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,2,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,324,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,6,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,3240,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,1,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,32400,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,2,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,324000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,3,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,3240000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,2,0,0,H
+17249,Teunis,2008,FUT2-,8FIIa,GI.1,32400000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,4,0,0,H
+17249,Teunis,2008,FUT2-,8FIIb,GI.1,692000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,2,0,0,H
+17249,Teunis,2008,FUT2-,8FIIb,GI.1,6920000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,4,0,0,H
+17249,Teunis,2008,FUT2-,8FIIb,GI.1,69200000,Fetal excretion of virus and seroconversion,Diarrhea and/or vomiting with constitutional symptoms,0,0,0,H
+17336,Treanor,1988,Not controlled,Hawaii agent,GII.1,Unknown,seroconversion,Diarrhea,10,9,7,H

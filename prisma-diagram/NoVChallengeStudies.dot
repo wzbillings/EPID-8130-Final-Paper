@@ -1,0 +1,41 @@
+digraph NoVChallengeStudies {
+  a -> nodups;
+  a [label="PubMed\n\n3460 Citation(s)"];
+  a [shape="box"];
+
+  b -> nodups;
+  b [label="Web of Science\n\n2866 Citation(s)"];
+  b [shape="box"];
+
+  nodups -> incex;
+  nodups [label="5301 non-duplicate\ncitations identified"];
+  nodups [shape="box"];
+
+  incex -> {ex; ft}
+  incex [label="title/abstract review"];
+
+  ex [label="5203 excluded after\ntitle/abstract review"];
+  ex [shape="box"];
+  {rank=same; incex ex}
+
+  ft -> incex2;
+  ft [label="98 Articles Retrieved"];
+  ft [shape="box"];
+
+  incex2 -> {daex; ftex}
+  incex2 [label="full text review"];
+
+  ftex [label="34 excluded after\nfull text review"];
+  ftex [shape="box"];
+  {rank=same; ftex incex2 daex}
+  incex2 -> inc;
+
+  daex [label="6 excluded during\ndata abstraction"];
+  daex [shape="box"];
+
+  inc [label="58 articles included"];
+  inc [shape="box"];
+  inc [peripheries=2];
+}
+
+/* dot -Tpng -Tsvg  -Tpng NoVChallengeStudies.dot -O */
