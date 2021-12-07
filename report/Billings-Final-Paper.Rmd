@@ -1,13 +1,28 @@
 ---
 title: "Infectivity of human norovirus in live challenge trials: a systematic review and meta-analysis"
-author: "W. Zane Billings"
+author:
+  - name: W. Zane Billings
+    institute: one
+  - name: Anne Marie Dye
+    institute: two
+  - name: Andreas Handel
+    institute: one
+institute:
+  - one: Department of Epidemiology and Biostatistics, College of Public Health, University of Georgia
+  - two: Department of Environmental Health, College of Public Health, University of Georgia
 date: "2021-12-13"
 site: bookdown::bookdown_site
 output:
   bookdown::word_document2: 
     toc: false
-    css: style.css
-bibliography: "http://127.0.0.1:23119/better-bibtex/export/collection?/1/Class//EPID%208130%20Final%20Project.biblatex"
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+    number_sections: FALSE
+    fig_cap: TRUE
+bibliography:
+  - "http://127.0.0.1:23119/better-bibtex/export/collection?/1/E6YNTUCZ.biblatex"
+  - "r-refs.bib"
 csl: jama.csl
 abstract: |
   Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We also perform a meta regression on inoculum dose. We find that [EXPLAIN RESULTS].
@@ -19,8 +34,30 @@ editor_options:
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # Loading required packages
+## For reporting
+library(rmarkdown)
+library(bookdown)
+library(knitr)
+
+## For tables
 library(flextable)
+
+## For figures
+library(PRISMA2020)
+
+## For analysis
+library(meta)
+library(metafor)
+library(dmetar)
+
+## For wrangling
+
+
+# Write r-refs bibliography
+knitr::write_bib(file = "r-refs.bib")
 ```
+
+\newpage
 
 # Introduction
 
@@ -28,11 +65,16 @@ Human norovirus (NoV) is a small, round-structured, unenveloped, positive-sense 
 
 # Methods
 
-Short intro here
+We conducted a systematic review of papers using data from norovirus challenge studies, and from the included reports, we identified unique studies. Then, we abstracted data on the proportion of infected individuals from each study, and conducted a meta-analysis of these data.
 
 ## Literature search
 
-We searched two databases to find literature: PubMed [(https://www.ncbi.nlm.nih.gov/pubmed/)](https://www.ncbi.nlm.nih.gov/pubmed/) and Web of Science [(https://www.webofscience.com/)](https://www.webofscience.com/). The search terms, included in Table \@ref(tab:SearchTerms), contained terms for norovirus,  
+We searched two databases to find literature:
+
+* PubMed [(https://www.ncbi.nlm.nih.gov/pubmed/)](https://www.ncbi.nlm.nih.gov/pubmed/) and
+* Web of Science [(https://www.webofscience.com/)](https://www.webofscience.com/).
+
+The search terms, included in Table \@ref(tab:SearchTerms), contained terms for norovirus, terms related to human studies, and terms related to the challenge (or volunteer) study design. The databases were searched on September ##, 2021, with no filter for date used during the search.
 
 ```{r SearchTerms}
 STtable <- data.frame(
@@ -66,19 +108,80 @@ STtable <- data.frame(
   flextable::align(j = 1, align = "right", part = "all") |>
   flextable::align(j = 2, align = "left", part = "all") |>
   flextable::set_caption("Search strings for the two databases searched.") |>
+  flextable::fontsize(size = 11, part = "all") |>
   flextable::autofit() |>
   flextable::set_table_properties(layout = "autofit")
 
 STtable
 ```
 
+Reports were selected for inclusion if they referenced a human norovirus challenge study with controlled inoculation of participants. No other inclusion criteria (location, date, study design, etc.) were used. Reports were excluded from the review if they were not primary research articles (i.e. reviews or letters to the editor), not written in English, or not available to the authors. Two reviewers (WZB and AMD) independently reviewed titles and abstracts, with disagreements being resolved by a third reviewer (AH). The reviewers repeated the process for the full-text review.
+
+From the included reports, the reviewers identified unique studies by examining citations for data sources. We created a directed acyclic graph (DAG) based on citations in reference sections of papers--in this format, the end notes of the DAG are studies with original populations. Only reports which appeared to discuss original data collection and did not cite their data as coming from a previous report were considered to be unique studies.
 
 ## Data abstraction
 
+From each study (only reports which included original data collection), we abstracted the following information:
+
+1. Reference information including name of the first author and the year of publication;
+2. Study design for the challenge portion of the study (either case series or randomized trial);
+3. Demographic information reported for each study including age range, percentage of male participants, percentage of white participants, and location of the study site;
+4. Whether the study controlled for participant FUT2 genotype;
+5. Any other eligibility criteria for study enrollment;
+6. Inoculum dose and genotype;
+7. Criteria for reporting infection and illness; and
+8. For each combination of FUT2 status, dose, and other study sub-samples (e.g. vaccine vs. placebo in vaccine trials), the number of participants challenged, number of participants with confirmed infection, and the number of participants with confirmed illness.
+
+Reported inoculum strains were standardized to modern nomenclature where possible, criteria for infection and illness were standardized, and inoculum dose was converted to genome equivalent copies (1 RT-PCR unit = 400 genome equivalent copies) [CITE ATMAR PAPER HERE].
+
+## Study quality assessment
+
 ## Statistical methods
 
+We fit an overall meta-analysis model for the proportion of infected individuals (proportion infected) by pooling together all subgroups reported within each study. We used a generalized linear mixed-effected modeling approach with logit-transformed proportions (log-odds) as the outcome [@stijnen2010; @harrer2021]. The method of maximum likelihood was used to estimate $\tau^2$ (between-study heterogeneity). Confidence intervals for pooled effects were calculated using the Knapp-Hartung adjustment [@knapp2003; @sidik2002], which is typically sensible [@harrer2021; @inthout2014; @langan2019]
+
+The GLMM method with log-odds as the outcome has been previously recommended in the literature for the meta-analysis of proportions [@schwarzer2019]. When using a GLMM approach, no weights are estimated for each study, and $\tau^2$ (the estimate of between-study heterogeneity) can only be estimated through the method of maximum likehood, and a confidence interval for $\tau^2$ cannot be obtained [@harrer2021].
+
+*A priori* subgroup analyses were conducted to examine the effect of study risk of bias (high risk of bias vs. low or moderate), norovirus genogroup (GI, GII, or unknown), and whether FUT2 was controlled for in the study. For subgroup analyses, we use the so-called "fixed-effects (plural)" model with the $Q$-test for subgroup differences [@harrer2021; @borenstein2011; @borenstein2013]. Estimated between-study heterogeneity ($\tau^2$) was assumed to be different for all subgroups.
+
+Influence of individual studies on the overall result was analyzed *post-hoc* using three methods. First, we used a simple method which classifies studies as outliers if the estimate confidence interval for the individual study does not overlap with the confidence interval for the pooled estimate [@harrer2021]. Second, we used a leave-one-out approach and manually identified outliers using a Baujat plot [@baujat2002] and diagnostics [@viechtbauer2010]. Third, we used the GOSH (Graphical display Of Study Heterogeneity) method, which fit 1,000,000 random subset models, and plots the estimated heterogeneity vs. the estimated effect size [@olkin2012]. From the GOSH results, we applied three unsupervised clustering algorithms: $k$-means [@hartigan1979], DBSCAN [@schubert2017], and Gaussian mixture modeling [@fraley2002]. Study over-representation within clusters is used to determine which studies have an undue effect on heterogeneity [@harrer2021]. Overall, outliers were detected by consensus--if any two of the three methods flagged a particular study, that study was designated as an outlier.
+
+To assess the effect of inoculum dose on proportion infected, we performed a meta-regression analysis. (EXPLAIN METHODS)
+
+Finally, publication bias was assessed graphically using a contour-enhanced funnel plot (CITE) and numerically using Egger's test (CITE).
+
+## Software
+
+Reference management was conducted using both EndNote [@endnote] for deduplication and searching for missing reference fields, and Zotero [@zotero] for archival purposes. Data abstraction and review of reports was conducted using Microsoft Excel 365 (Microsoft Corporation, Santa Rosa, CA, USA) and Google Sheets (Google, Mountain View, CA, USA).
+
+All analyses were conducted using R version 4.1.1 [@R-base]. The packages `meta` (CITE), `metafor` (CITE THIS), and `dmetar` (CITE THIS) were used for meta-analysis. Figures were generated using the analysis packages along with `ggplot2` (CITE THIS) and `PRISMA2020` [@R-PRISMA2020; @PRISMA20202021; @haddaway2021]. Tables were generated using the package `flextable` [@R-flextable]. This report was generated using R Markdown with the packages `rmarkdown` [@R-rmarkdown; @rmarkdown2018; @rmarkdown2020], `knitr` [@R-knitr; @knitr2014; @knitr2015], and `bookdown` [@R-bookdown; @bookdown2016]. Several additional packages were used for data cleaning and wrangling (CITE THESE PACKAGES). A complete printout of the R session information can be found in the Appendix.
+
 # Results
+
+## Identification of studies
+
+## Study characteristics
+
+## Overall meta-analysis
+
+## Influence analyses
+
+## Subgroup analyses
+
+## Meta-regression
 
 # Discussion
 
 # References
+
+<div id="refs"></div>
+
+# Data and code availibility {-}
+
+All data sheets, along with cleaning and analysis code, are available on [GitHub](link), and the code at time of writing is archived on Zenodo: [doi url](link).
+
+# R session information {-}
+
+```{r session information}
+pander::pander(sessionInfo())
+```
