@@ -25,7 +25,7 @@ bibliography:
   - "r-refs.bib"
 csl: jama.csl
 abstract: |
-  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We also perform a meta regression on inoculum dose. We find that [EXPLAIN RESULTS].
+  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We find that [EXPLAIN RESULTS].
 editor_options: 
   chunk_output_type: console
 ---
@@ -44,14 +44,20 @@ library(flextable)
 
 ## For figures
 library(PRISMA2020)
+library(robvis)
 
 ## For analysis
 library(meta)
 library(metafor)
 library(dmetar)
 
-## For wrangling
-
+## Other
+library(here)
+library(janitor)
+library(magick)
+library(rsvg)
+library(DiagrammeRsvg)
+library(dplyr)
 
 # Write r-refs bibliography
 knitr::write_bib(file = "r-refs.bib")
@@ -61,7 +67,7 @@ knitr::write_bib(file = "r-refs.bib")
 
 # Introduction
 
-Human norovirus (NoV) is a small, round-structured, unenveloped, positive-sense single-strand RNA virus with a linear, unsegmented genome, belonging to the caliciviridae family. NoV was first isolated in .
+Human norovirus (NoV) is a small, round-structured, unenveloped, positive-sense single-strand RNA virus with a linear, unsegmented genome, belonging to the caliciviridae family [CITE THIS]. NoV was first isolated in .
 
 # Methods
 
@@ -136,39 +142,62 @@ Reported inoculum strains were standardized to modern nomenclature where possibl
 
 ## Study quality assessment
 
+Study quality was assessed using a modification of the JBI critical appraisal tool for case series studies [@munn2020]. All included studies were evaluated on this scale. The rubric for assessing studies is included in the appendix.
+
 ## Statistical methods
 
-We fit an overall meta-analysis model for the proportion of infected individuals (proportion infected) by pooling together all subgroups reported within each study. We used a generalized linear mixed-effected modeling approach with logit-transformed proportions (log-odds) as the outcome [@stijnen2010; @harrer2021]. The method of maximum likelihood was used to estimate $\tau^2$ (between-study heterogeneity). Confidence intervals for pooled effects were calculated using the Knapp-Hartung adjustment [@knapp2003; @sidik2002], which is typically sensible [@harrer2021; @inthout2014; @langan2019]
+We fit an overall meta-analysis model for the proportion of infected individuals (proportion infected) by pooling together all subgroups reported within each study. We used a generalized linear mixed-effected modeling approach with logit-transformed proportions (log-odds) as the outcome [@stijnen2010; @harrer2021]. The method of maximum likelihood was used to estimate $\tau^2$ (between-study heterogeneity). Confidence intervals for pooled effects were calculated using the Knapp-Hartung adjustment [@knapp2003; @sidik2002], which is typically sensible [@harrer2021; @inthout2014; @langan2019]. The GLMM method with log-odds as the outcome has been previously recommended in the literature for the meta-analysis of proportions [@schwarzer2019]. When using a GLMM approach, no weights are estimated for each study, and $\tau^2$ (the estimate of between-study heterogeneity) can only be estimated through the method of maximum likehood, and a confidence interval for $\tau^2$ cannot be obtained [@harrer2021].
 
-The GLMM method with log-odds as the outcome has been previously recommended in the literature for the meta-analysis of proportions [@schwarzer2019]. When using a GLMM approach, no weights are estimated for each study, and $\tau^2$ (the estimate of between-study heterogeneity) can only be estimated through the method of maximum likehood, and a confidence interval for $\tau^2$ cannot be obtained [@harrer2021].
+*A priori* subgroup analyses were conducted to examine the effect of study risk of bias (high risk of bias vs. other studies), norovirus genogroup (GI, GII, or unknown), and whether FUT2 was controlled for in the study. For subgroup analyses, we use the so-called "fixed-effects (plural)" model with the $Q$-test for between-subgroup differences [@harrer2021; @borenstein2009; @borenstein2013]. Estimated between-study heterogeneity ($\tau^2$) was assumed to be different for all subgroups, and models within-subgroups were fit used the random-effects GLMM method as previously described.
 
-*A priori* subgroup analyses were conducted to examine the effect of study risk of bias (high risk of bias vs. low or moderate), norovirus genogroup (GI, GII, or unknown), and whether FUT2 was controlled for in the study. For subgroup analyses, we use the so-called "fixed-effects (plural)" model with the $Q$-test for subgroup differences [@harrer2021; @borenstein2011; @borenstein2013]. Estimated between-study heterogeneity ($\tau^2$) was assumed to be different for all subgroups.
+Influence of individual studies on the overall result was analyzed *post-hoc* using three methods. First, we used a simple method which classifies studies as outliers if the estimate confidence interval for the individual study does not overlap with the confidence interval for the pooled estimate [@harrer2021]. Second, we used a leave-one-out approach and manually identified outliers using a Baujat plot [@baujat2002] and diagnostics [@viechtbauer2010]. Third, we used the GOSH (Graphical display Of Study Heterogeneity) method, wherein we fit 1,000,000 models with random subsets of studies included. Then, we plotted the estimated heterogeneity vs. the estimated effect size of all random subset analyses [@olkin2012]. From the GOSH results, we applied three unsupervised clustering algorithms: $k$-means [@hartigan1979], DBSCAN [@schubert2017], and Gaussian mixture modeling [@fraley2002]. Study over-representation within clusters is used to determine which studies have an undue effect on heterogeneity [@harrer2021]. Overall, outliers were detected by consensus--if any two of the three methods flagged a particular study, that study was designated as an outlier.
 
-Influence of individual studies on the overall result was analyzed *post-hoc* using three methods. First, we used a simple method which classifies studies as outliers if the estimate confidence interval for the individual study does not overlap with the confidence interval for the pooled estimate [@harrer2021]. Second, we used a leave-one-out approach and manually identified outliers using a Baujat plot [@baujat2002] and diagnostics [@viechtbauer2010]. Third, we used the GOSH (Graphical display Of Study Heterogeneity) method, which fit 1,000,000 random subset models, and plots the estimated heterogeneity vs. the estimated effect size [@olkin2012]. From the GOSH results, we applied three unsupervised clustering algorithms: $k$-means [@hartigan1979], DBSCAN [@schubert2017], and Gaussian mixture modeling [@fraley2002]. Study over-representation within clusters is used to determine which studies have an undue effect on heterogeneity [@harrer2021]. Overall, outliers were detected by consensus--if any two of the three methods flagged a particular study, that study was designated as an outlier.
+<!--To assess the effect of inoculum dose on proportion infected, we performed a meta-regression using proportion infected as the response and inoculum dose as the explanatory variable. The method of maximum likelihood was used to estimate $\tau^2$, as previously described. The $R^2_*$ metric estimates the reduction in heterogeneity variance from the regression model, compared to the overall random-effects model, and was therefore used as a metric for goodness-of-fit. The slope coefficient was tested for significance using the Knapp-Hartung adjustment for the Wald-type test [@harrer2021].-->
 
-To assess the effect of inoculum dose on proportion infected, we performed a meta-regression analysis. (EXPLAIN METHODS)
-
-Finally, publication bias was assessed graphically using a contour-enhanced funnel plot (CITE) and numerically using Egger's test (CITE).
+Finally, since we have more than 10 studies [@sterne2011], we assessed publication bias graphically using a contour-enhanced funnel plot [@peters2008] and numerically using Peters' test [@peters2008]. Peters' test accounts for dependence between the effect size and standard error for effect sizes based on binary outcome data. The common method, Egger's test [@egger1997], does not, so Peters' test has a lower false positive rate in comparison [@harrer2021; @peters2008].
 
 ## Software
 
 Reference management was conducted using both EndNote [@endnote] for deduplication and searching for missing reference fields, and Zotero [@zotero] for archival purposes. Data abstraction and review of reports was conducted using Microsoft Excel 365 (Microsoft Corporation, Santa Rosa, CA, USA) and Google Sheets (Google, Mountain View, CA, USA).
 
-All analyses were conducted using R version 4.1.1 [@R-base]. The packages `meta` (CITE), `metafor` (CITE THIS), and `dmetar` (CITE THIS) were used for meta-analysis. Figures were generated using the analysis packages along with `ggplot2` (CITE THIS) and `PRISMA2020` [@R-PRISMA2020; @PRISMA20202021; @haddaway2021]. Tables were generated using the package `flextable` [@R-flextable]. This report was generated using R Markdown with the packages `rmarkdown` [@R-rmarkdown; @rmarkdown2018; @rmarkdown2020], `knitr` [@R-knitr; @knitr2014; @knitr2015], and `bookdown` [@R-bookdown; @bookdown2016]. Several additional packages were used for data cleaning and wrangling (CITE THESE PACKAGES). A complete printout of the R session information can be found in the Appendix.
+All analyses were conducted using R version 4.1.1 [@R-base]. The packages `meta` [@R-meta; @meta2019], `metafor` [@R-metafor; @metafor2010], and `dmetar` [@R-dmetar; @harrer2021] were used for meta-analysis. Figures were generated using the analysis packages, `robvis` [@R-robvis], and `PRISMA2020` [@R-PRISMA2020; @PRISMA20202021; @haddaway2021]. Tables were generated using the package `flextable` [@R-flextable]. This report was generated using R Markdown with the packages `rmarkdown` [@R-rmarkdown; @rmarkdown2018; @rmarkdown2020], `knitr` [@R-knitr; @knitr2014; @knitr2015], and `bookdown` [@R-bookdown; @bookdown2016]. Several additional packages were used for data cleaning and wrangling, and for miscellaneous tasks [@R-here; @R-janitor; @R-magick; @R-rsvg; @R-DiagrammeRsvg; @R-dplyr]. A complete printout of the R session information can be found in the Appendix.
 
 # Results
 
 ## Identification of studies
 
+Overall, 5301 non-duplicate records were obtained from searching PubMed and Web of Science. After reviewing the titles and abstracts of records, 98 reports were sought for retrieval. Of those, two reports could not be obtained, and so 96 reports were retrieved for full-text review. After applying the eligibility criteria, we selected 65 reports for inclusion in the study (CITE THESE). The PRISMA diagram for study inclusion is shown in Figure \@ref(fig:PRISMA).
+
+```{r PRISMA}
+knitr::include_graphics(here::here("figures", "PRISMA-diagram.png"))
+```
+
+From the list of included reports, we determined the reports which reflect original data collection by examining the methods reported in the paper. A DAG showing citations pointing to original data sources is shown in Figure \@ref(figure:DAG). In total, 20 papers reflecting original sources of data were selected for inclusion in synthesis results [@agus1973; @atmar2011; @atmar2008; @atmar2014b; @bernstein2015; @dolin1971; @frenck2012; @gordon1956; @graham1994; @keswick1985; @leon2011; @lindesmith2005; @lindesmith2003; @madore1990; @mateo2020; @okhuysen1995; @parker1994; @seitz2011; @teunis2008; @treanor1988]. Of the 65 reports, 7 appeared to reflect original sources of data, but either did not provide the results necessary for synthesis, or provided the results in a format that was not usable for data extraction [@grohmann1981; @harrington2002; @lindesmith2010; @lindesmith2019; @liu2013; @moe2004; @parker1993].
+
+```{r DAG}
+knitr::include_graphics(here::here("figures", "papers-dag.png"))
+```
+
 ## Study characteristics
+
+put the characteristics here.
+
+A summary plot of the risk of bias for the included studies is shown in Figure \@ref(fig:RoBSummary). A summary plot of individual risk of bias is shown in Figure \@ref(fig:Stoplight). 
+
+```{r RobSummary}
+
+```
+
+```{r Stoplight}
+
+```
+
 
 ## Overall meta-analysis
 
-## Influence analyses
-
 ## Subgroup analyses
 
-## Meta-regression
+## Influence analyses
 
 # Discussion
 
@@ -185,3 +214,36 @@ All data sheets, along with cleaning and analysis code, are available on [GitHub
 ```{r session information}
 pander::pander(sessionInfo())
 ```
+
+# Study quality rubric {-}
+
+1. (Clear Inclusion Criteria) Were there clear criteria for inclusion in the case series?
+    + Yes: Inclusion criteria are stated clearly in the study.
+    + No: Study was sampled by convenience or without clear exclusion criteria.
+    + Unclear: Criteria for inclusion are not described.
+2. (Reliable Condition Measure) Was the condition measured in a standard, reliable way for all participants included in the case series?
+  + Yes: The same method was used to assess norovirus infection for all patients. 
+  + No: Participants were assessed for infection in different ways.
+  + Unclear: Method of assessing infection was not reported.
+3. (Valid Condition Methods) Were valid methods used for identification of the condition for all participants included in the case series?
+  + Yes: Infection was assessed using any molecular method (e.g. serology, PCR, etc.).
+  + No: Infection was assessed using clinical symptoms alone.
+  + Unclear: Method of assessing infection is not reported.
+4. (Same Cohort) Were all participants sampled from the same underlying population at the same time? (I.e. did the participants form a single cohort?)
+  + Yes: All participants were sampled from the same general population, or if multiple cohorts were pooled together during the study, the results are stratified by cohort. All patients were infected with the same inoculum, or stratified by inoculum.
+  + No: Participants were recruited heterogeneously, or pooled cohort results were not stratified. Or patients with different inocula were pooled.
+  + Unclear: Impossible to tell from given information whether participants were pooled from various cohorts without stratification or not.
+5. (Complete Demographics) Was there clear reporting of the demographics of the participants included in the study?
+  + Yes: Age range of participants was reported and medical history of patients was mentioned.
+  + No: Age range is not reported or medical history not mentioned.
+6. (Complete Clinical) Was there clear reporting of clinical information of the participants?
+  + Yes: Infection outcome is reported for the same number of patients who were recruited. Or, if numbers are different, the loss of participants is explained.
+  + No: Number of recruits reported does not match results, or number of total recruits is not reported.
+7. (Site Information) Was there clear reporting of the presenting site or clinic demography?
+  + Yes: authors describe the target population and state where the trial was conducted.
+  + No: authors do not describe the study population or do not state where the trial was conducted.
+  + Unclear: authors briefly describe the study site without detail, or describe the study site only as “multiple centers” or equivalent.
+8. Overall risk of bias
+  + Low: Yes in at least six domains, No in zero domains.
+  + Moderate: Yes in at least five domains, No in at most one domain.
+  + High: Yes in fewer than five domains, or No in more than one domain.

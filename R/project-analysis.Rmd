@@ -26,6 +26,7 @@ library(meta)
 library(metafor)
 library(dmetar)
 library(magick)
+library(robvis)
 library(zlib)
 library(janitor)
 
@@ -82,6 +83,7 @@ all_studies_meta <- all_studies_df %>%
     method = "GLMM",
     sm = "PLOGIT",
     method.tau = "ML",
+    fixed = FALSE,
     hakn = TRUE,
     prediction = TRUE,
     title = "Proportion of challenge participants with confirmed infection"
@@ -97,10 +99,20 @@ save_base_plot(
   all_studies_meta,
   here::here("figures", "all-studies-forest.png"),
   # I hate this solution but can't figure out a better way
-  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)}
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  fs.hetstat = 10
 )
 
 knitr::include_graphics(here::here("figures", "all-studies-forest.png"))
+
+# Save sorted by year as well
+save_base_plot(
+  all_studies_meta,
+  here::here("figures", "all-studies-forest-yr.png"),
+  # I hate this solution but can't figure out a better way
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = year, ...)},
+  fs.hetstat = 10
+)
 ```
 
 Let's make the drapery plot also which could be fun.
@@ -127,12 +139,16 @@ First, let's do simple outlier detection: we'll remove any studies whose CIs don
 ```{r all studies simple outlier detection}
 # simple outlier detection
 simple_outliers <- find.outliers(all_studies_meta)
+so_meta <- simple_outliers$m.random %>%
+  update.meta(exclude = c(2, which(simple_outliers$m.random$exclude)))
+
 save_base_plot(
-  simple_outliers$m.random,
+  so_meta,
   here::here("figures", "all-studies-SO.png"),
-  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)}
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  fs.hetstat = 10
 )
-simple_outliers
+so_meta
 knitr::include_graphics(here::here("figures", "all-studies-SO.png"))
 ```
 
@@ -553,6 +569,6 @@ save_base_plot(
 ```
 
 ```{r}
-egger <- metabias(all_studies_meta, method.bias = "Egger")
+egger <- metabias(all_studies_meta, method.bias = "peters")
 ```
 

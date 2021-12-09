@@ -97,6 +97,6 @@ grViz(diagram = "digraph dag {
   DiagrammeRsvg::export_svg() |>
   charToRaw() |>
   rsvg::rsvg_png(
-    file = "C:/Users/Zane/My Drive/Class/Y2S1/EPID-8130/papers-dag.png",
+    file = here::here("figures", "papers-dag.png"),
     width = 1600
   )
