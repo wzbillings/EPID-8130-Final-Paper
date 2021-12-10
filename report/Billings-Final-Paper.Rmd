@@ -25,7 +25,7 @@ bibliography:
   - "r-refs.bib"
 csl: jama.csl
 abstract: |
-  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We find that [EXPLAIN RESULTS].
+  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We find a high degree of heterogeneity among studies, which is somewhat explained by outliers, and not explained by any abstracted covariates. Our results suggest that either proportion of infected individuals in a norovirus challenge study is naturally heterogeneous, or is influenced primarily by unmeasured covariates. As potential infection rates may be dependent on several characteristics of research protocols, norovirus inoculum, research staff, and study participants, our results seem reasonable.
 editor_options: 
   chunk_output_type: console
 ---
@@ -127,7 +127,7 @@ From the included reports, the reviewers identified unique studies by examining 
 
 ## Data abstraction
 
-From each study (only reports which included original data collection), we abstracted the following information:
+From each study (only reports which included original data collection), one author (WZB) abstracted the following information:
 
 1. Reference information including name of the first author and the year of publication;
 2. Study design for the challenge portion of the study (either case series or randomized trial);
@@ -138,11 +138,11 @@ From each study (only reports which included original data collection), we abstr
 7. Criteria for reporting infection and illness; and
 8. For each combination of FUT2 status, dose, and other study sub-samples (e.g. vaccine vs. placebo in vaccine trials), the number of participants challenged, number of participants with confirmed infection, and the number of participants with confirmed illness.
 
-Reported inoculum strains were standardized to modern nomenclature where possible, criteria for infection and illness were standardized, and inoculum dose was converted to genome equivalent copies (1 RT-PCR unit = 400 genome equivalent copies) [CITE ATMAR PAPER HERE].
+Reported inoculum strains were standardized to modern nomenclature where possible, criteria for infection and illness were standardized, and inoculum dose was converted to genome equivalent copies (1 RT-PCR unit = 400 genome equivalent copies) [@atmar2013].
 
 ## Study quality assessment
 
-Study quality was assessed using a modification of the JBI critical appraisal tool for case series studies [@munn2020]. All included studies were evaluated on this scale. The rubric for assessing studies is included in the appendix.
+Study quality was assessed using a modification of the JBI critical appraisal tool for case series studies [@munn2020]. All included studies were evaluated on this scale by one author (WZB). Studies were assessed on seven domains: clear inclusion criteria, reliability of infection assessment, validity of infection assessment, whether all participants were drawn from the same cohort, complete reporting of relevant demographic information, complete reporting of relevant clinical information, and reporting of study site information. The full rubric for assessing studies is included in the appendix.
 
 ## Statistical methods
 
@@ -180,24 +180,58 @@ knitr::include_graphics(here::here("figures", "papers-dag.png"))
 
 ## Study characteristics
 
-put the characteristics here.
+The abstracted study characteristics for the 20 included papers are shown in Table \@ref(tab:SummaryCharacteristics). The earliest study was conducted in 1956, and the most recent study was conducted in 2020, with 15/20 of the studies conducted in 1990 or later, and 11/20 of the studies conducted in 2000 or later. Most studies (15/20) reported information on the age range of participants, and all studies only included adults, as expected for challenge studies. The three oldest studies only included male subjects, but later studies tended to include an equal balance of male and female participants, where reported. Racial diversity in cohorts was reported in less than half of the included studies, and varied significantly by study. Half of the included studies (10/20) either reported results stratified by FUT2 (secretor) genotype or only recruited participants with FUT2+ genotype. Three studies only included participants with A or O blood types. Only one study (Frenck 2012) reported low pre-challenge titer as an eligibility criterion for subject recruitment. Note that the two oldest studies recruited participants at least partially from incarcerated populations--while the studies claim that the subjects are volunteers, neither study reports methods for preventing coercive recruiting, nor mentions how incarcerated subjects were compensated. These studies likely fail to meet modern ethical guidelines, but we chose to include the data in our synthesis in the hopes that some good can come out of past scientific misconduct.
 
-A summary plot of the risk of bias for the included studies is shown in Figure \@ref(fig:RoBSummary). A summary plot of individual risk of bias is shown in Figure \@ref(fig:Stoplight). 
+```{r StudyCharacteristics}
+scdat <- read.csv(here::here("data", "study-characteristics.csv"), nrows = 20)
+scdat %>%
+  dplyr::select(-EndNote.record.., -Other.Info, -Study.type) %>%
+  dplyr::arrange(Year.published) %>%
+  dplyr::mutate(
+    Age = gsub(", ", " - ", Age),
+    Study = paste(First.author, Year.published),
+    .keep = "unused"
+  ) %>%
+  dplyr::select(Study, N, e, everything()) %>%
+  janitor::clean_names(sep_out = " ") %>%
+  flextable::flextable() |>
+  flextable::set_header_labels(
+    male = "% male",
+    white = "% white",
+    `fut2 control` = "FUT2 control",
+    `ro b` = "RoB"
+  ) %>%
+  flextable::theme_booktabs(bold_header = TRUE) %>%
+  flextable::align(align = "left", part = "all") %>%
+  flextable::set_caption("Abstracted demographic information and other study characteristics for the 20 unique original data collection studies which were identified.") %>%
+  flextable::footnote(
+    i = 1, j = 2:3, part = "header",
+    value = flextable::as_paragraph(c("Sample size", "Number of events"))
+  ) %>%
+  flextable::fontsize(size = 11, part = "all") %>%
+  flextable::autofit() %>%
+  flextable::set_table_properties(layout = "autofit")
+```
+
+The majority of the studies (11/20) were judged to be at high risk of bias. A summary plot of the risk of bias for the included studies is shown in Figure \@ref(fig:RoBSummary). The most common issue was whether the recruited participants were from the same underlying cohort (or if the study stratified results by cohort) and whether inclusion criteria were clearly reported. Note that there are no high risk of bias studies which were conducted after 2010--many older studies lacked the same standardized reporting which is now commonplace, and so have a higher risk of bias. Furthermore, older reports often tended to report the results of multiple challenge studies simultaneously, without stratifying results by cohort. Risk of bias domain assessments for each study are shown in Figure \@ref(fig:Stoplight).
 
 ```{r RobSummary}
-
+knitr::include_graphics(here::here("figures", "rob-summary.png"))
 ```
 
 ```{r Stoplight}
-
+knitr::include_graphics(here::here("figures", "rob-traffic-light.png"))
 ```
 
+## Meta-analysis
 
-## Overall meta-analysis
+(OVERALL)
 
-## Subgroup analyses
+(SUBGROUPS)
 
-## Influence analyses
+(INFLUENCE)
+
+(SUMMARY TABLE)
 
 # Discussion
 
@@ -205,7 +239,9 @@ A summary plot of the risk of bias for the included studies is shown in Figure \
 
 <div id="refs"></div>
 
-# Data and code availibility {-}
+# Other information {-}
+
+The review has not been registered and no formal protocol was prepared before the review process began. The authors wish to declare that they have no competing interests. Financial support was provided to WZB by the University of Georgia Graduate School, an entity wholly unrelated to the review.
 
 All data sheets, along with cleaning and analysis code, are available on [GitHub](link), and the code at time of writing is archived on Zenodo: [doi url](link).
 
