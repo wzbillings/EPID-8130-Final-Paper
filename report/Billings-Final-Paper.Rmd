@@ -123,7 +123,7 @@ STtable <- data.frame(
   flextable::align(j = 1, align = "right", part = "all") |>
   flextable::align(j = 2, align = "left", part = "all") |>
   flextable::set_caption("Search strings for the two databases searched.") |>
-  flextable::fontsize(size = 8, part = "all") |>
+  flextable::fontsize(size = 10, part = "all") |>
   flextable::autofit() |>
   flextable::set_table_properties(layout = "autofit")
 
@@ -218,7 +218,7 @@ scdat %>%
     value = flextable::as_paragraph(c("Sample size", "Number of events",
                                       "Whether subject FUT2 genotype status was measured"))
   ) %>%
-  flextable::fontsize(size = 10, part = "all") %>%
+  flextable::fontsize(size = 8, part = "all") %>%
   flextable::autofit() %>%
   flextable::set_table_properties(layout = "autofit")
 ```
@@ -342,6 +342,14 @@ knitr::include_graphics(here::here("figures", "peters-regression.png"))
 From the test, we cannot conclude that there is definite evidence of asymmetry. However, visual inspection of the data does suggest interesting patterns which may be unrelated to problems that cause asymmetry.
 
 # Discussion
+
+We identified 20 unique studies which contributed unique norovirus challenge data to the literature among the 65 studies we included in our review. Synthesizing data from these studies, we found significant heterogeneity between the proportion of infected individuals in norovirus challenges studies, which could not be explained by study risk of bias, inoculum genogroup, or exclusion of FUT2- participants. *Post hoc* automated analyses also detected a subset of outlying studies which had little in common. The funnel plot also provided visual evidence of heterogeneity in proportion estimates across studies. Taken together, our results indicate a degree of heterogeneity in infectivity across challenge studies, contrary to what we hypothesized.
+
+There is room for bias in our systematic review results, however. Primarily, we may not have captured all published norovirus challenge studies. Searching Google Scholar or medRχiv to identify gray literature and examining references of included studies may reveal additional sources of data that are missing from our review. Due to the breadth of records captured and identified from the two databases, the included studies seem likely to be representative of all norovirus human challenge studies which generated original infection data, but our data may not necessarily be reflective of unpublished studies (though there was little statistical evidence of funnel plot asymmetry in our results). Furthermore, our study risk of bias assessment tool is a prototype, as the JBI case series quality assessment tool is not a perfect fit for the typical challenge study design, and to the authors' knowledge, no such tool has been verified by challenge study experts. That being said, several of our studies are old and there are numerous issues with the reporting of case series in general, so finding several studies at high risk of bias may not be surprising. Incomplete study capture or errors in using the risk of bias assessment tool may also contribute to the unexplainable heterogeneity in our results.
+
+However, between-study heterogeneity may also be explained by unmeasured (and potentially unmeasurable) differences between challenge studies. Challenge studies are likely to capture different cohorts, and minor variations in study administration and protocols could potentially lead to variation in the proportion of challenged individuals who were affected. Potential differences with the inocula used, such as length of cold storage, original source and number of times passaged, genotypic differences despite the reported genogroup, and inoculum dose could all play a large role in norovirus infectivity. Given the high probability of norovirus infection when even a small number of viral particles are administered [@teunis2008; @teunis2020], inoculum dose and genogroup are not expected to play a large role in challenge study infectivity, but surprinsing effects or slight variation in protocols could lead to observed heterogeneity across studies.
+
+Overall, we find that norovirus infectivity appears to be heterogeneous across challenge studies. We conducted a comprehensive systematic review and meta analysis, and so feel fairly confident that this result is representative of norovirus challenge studies in general. We expected norovirus challenge studies to have less variability in infectivity, but the observed variation could be due to differences in protocols and study administration, differences in inoculum characteristics, or differences in sampled cohorts which reflect the variability of norovirus attack rate in natural outbreaks due to heterogeneous host populations.
 
 # References
 
