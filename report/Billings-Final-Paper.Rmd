@@ -10,7 +10,7 @@ author:
 institute:
   - one: Department of Epidemiology and Biostatistics, College of Public Health, University of Georgia
   - two: Department of Environmental Health, College of Public Health, University of Georgia
-date: "2021-12-13"
+#date: "2021-12-13"
 output:
   bookdown::word_document2: 
     toc: false
@@ -19,12 +19,21 @@ output:
       - '--lua-filter=author-info-blocks.lua'
     number_sections: FALSE
     fig_cap: TRUE
+    reference_docx: "template.docx"
 bibliography:
   - "http://127.0.0.1:23119/better-bibtex/export/collection?/1/E6YNTUCZ.biblatex"
   - "r-refs.bib"
 csl: jama.csl
 abstract: |
-  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. Norovirus is spread primarily by the fecal-oral route and is highly transmissible, but norovirus outbreaks are often self-limiting. The wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, where experimental settings and route of transmission can be controlled, among other factors. In this way, norovirus challenge studies fill a unique niche in the literature and provide rich data for studying norovirus infection. However, there is no consensus on how many norovirus challenge studies have been conducted in the past, or what data were collected. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We find a high degree of heterogeneity among studies, which is somewhat explained by outliers, and not explained by any abstracted covariates. Our results suggest that either proportion of infected individuals in a norovirus challenge study is naturally heterogeneous, or is influenced primarily by unmeasured covariates. As potential infection rates may be dependent on several characteristics of research protocols, norovirus inoculum, research staff, and study participants, our results seem reasonable.
+  **Introduction**: Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. The wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, where experimental settings and route of transmission can be controlled, among other factors. Our objective was to find all available norovirus challenge study data, and from these data, determine whether the infectivity of norovirus is consistent across human challenge studies.
+  
+  **Methods**: We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data.  From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control, and *post hoc* outlier analyses to determine sources of heterogeneity. We additionally assessed the possibility of publication bias using a funnel plot.
+  
+  **Results**: We identified 65 reports for inclusion, and from those we found 20 studies which reported original collection of challenge data. We find a high degree of heterogeneity among studies, which is somewhat explained by outliers, and not explained by any abstracted covariates. Removing identified outliers reduces heterogeneity, but the outliers have no distinguishing features which set them apart from the other studies. The summary analyses are not meaningful due to the high degree of unexplainable heterogeneity.
+  
+  **Discussion**: Overall, we find that the attack rate of norovirus is not consistent across human challenge studies. Our results suggest that either proportion of infected individuals in a norovirus challenge study is naturally heterogeneous, or is influenced primarily by unmeasured covariates. As potential infection rates may be dependent on several characteristics of research protocols, norovirus inoculum, research staff, and study participants, our results seem reasonable.
+  
+  The primary source of funding for the review was the University of Georgia Graduate School. The review was not registered.
 editor_options: 
   chunk_output_type: console
 ---
@@ -62,11 +71,11 @@ library(dplyr)
 knitr::write_bib(file = "r-refs.bib")
 ```
 
-Word count:
+Word count: 4870
 
-Number of tables:
+Number of tables: 3
 
-Number of figures:
+Number of figures: 18
 
 \newpage
 
@@ -89,7 +98,11 @@ We searched two databases to find literature:
 * PubMed [(https://www.ncbi.nlm.nih.gov/pubmed/)](https://www.ncbi.nlm.nih.gov/pubmed/) and
 * Web of Science [(https://www.webofscience.com/)](https://www.webofscience.com/).
 
-The search terms, included in Table \@ref(tab:SearchTerms), contained terms for norovirus, terms related to human studies, and terms related to the challenge (or volunteer) study design. The databases were searched on September ##, 2021, with no filter for date used during the search.
+The search terms, included in Table \@ref(tab:SearchTerms), contained terms for norovirus, terms related to human studies, and terms related to the challenge (or volunteer) study design. The databases were searched on September 28, 2021, with no filter for date used during the search.
+
+Reports were selected for inclusion if they referenced a human norovirus challenge study with controlled inoculation of participants. No other inclusion criteria (location, date, study design, etc.) were used. Reports were excluded from the review if they were not primary research articles (i.e. reviews or letters to the editor), not written in English, or not available to the authors. Two reviewers (WZB and AMD) independently reviewed titles and abstracts, with disagreements being resolved by a third reviewer (AH). The reviewers repeated the process for the full-text review.
+
+\newpage
 
 ```{r SearchTerms}
 STtable <- data.frame(
@@ -129,8 +142,6 @@ STtable <- data.frame(
 
 STtable
 ```
-
-Reports were selected for inclusion if they referenced a human norovirus challenge study with controlled inoculation of participants. No other inclusion criteria (location, date, study design, etc.) were used. Reports were excluded from the review if they were not primary research articles (i.e. reviews or letters to the editor), not written in English, or not available to the authors. Two reviewers (WZB and AMD) independently reviewed titles and abstracts, with disagreements being resolved by a third reviewer (AH). The reviewers repeated the process for the full-text review.
 
 From the included reports, the reviewers identified unique studies by examining citations for data sources. We created a directed acyclic graph (DAG) based on citations in reference sections of papers--in this format, the end notes of the DAG are studies with original populations. Only reports which appeared to discuss original data collection and did not cite their data as coming from a previous report were considered to be unique studies.
 
@@ -235,37 +246,37 @@ knitr::include_graphics(here::here("figures", "rob-traffic-light.png"))
 
 ## Meta-analysis
 
+Estimates of the estimated proportion and 95% confidence interval for each study, along with the estimated random-effects summary estimate are shown in Figure \@ref(fig:MetaOverall). Individual point estimates for each study range from 0.36 to 1.00, with 95% confidence limits ranging from 0.22 at the lowest to 1.00 at the highest. The heterogeneity among studies is extremely high, estimated at $I^2 = 80\%$, and the 95% prediction interval indicates a low level of precision in the summary estimate. The summary estimate is unlikely to be trustworthy due to the high degree of heterogeneity present.
+
 ```{r MetaOverall, fig.cap = "Forest plot showing estimates for individual studies, along with the random-effects summary estimate."}
 knitr::include_graphics(here::here("figures", "all-studies-forest.png"))
 ```
 
-Estimates of the estimated proportion and 95% confidence interval for each study, along with the estimated random-effects summary estimate are shown in Figure \@ref(fig:MetaOverall). Individual point estimates for each study range from 0.36 to 1.00, with 95% confidence limits ranging from 0.22 at the lowest to 1.00 at the highest. The heterogeneity among studies is extremely high, estimated at $I^2 = 80\%$, and the 95% prediction interval indicates a low level of precision in the summary estimate. The summary estimate is unlikely to be trustworthy due to the high degree of heterogeneity present.
-
 In order to examine the heterogeneity between studies, we examined several *a priori* subgroup analyses. The first subgroup analysis we considered was the effect of stratifying by FUT2 genogroup, shown in Figure \@ref(fig:MetaFUT). Stratifying by FUT2 control status minimally reduces the within-subgroup heterogeneity as well as the overall heterogeneity. For both subgroups (FUT2 not controlled and FUT2 status controlled for), the summary estimates and $I^2$ values are similar to the overall pooled measure, indicating little difference between subgroups. The 95% prediction interval for the overall effect is slightly smaller, as is the overall $I^2$ value, but controlling for FUT2 appears to explain only a slight fraction of heterogeneity in the outcome.
+
+Next, we conducted a subgroup analysis using norovirus genogroup as the stratifying variable. The results are shown in Figure \@ref(fig:MetaGG). Interestingly, we notice that the studies which do not report the inoculum genogroup (Genogroup unknown) are quite homogeneous, $I^2 = 0\%$, although the summary estimate and prediction interval are wide. However, the more interesting comparison is between studies reporting a genogroup I inoculum and studies reporting a genogroup II inoculum. Among these two groups, stratifying by genogroup does not reduce heterogeneity at all compared to the overall analysis.
+
+The final planned subgroup analysis we conducted was stratified by risk of bias (high risk of bias studies compared to low/medium risk of bias studies, which were pooled), shown in Figure \@ref(fig:MetaRob). Again, we can see a great deal of variation within both subgroups, and stratifying by risk of bias does not appear to have a noticeable effect on heterogeneity. High risk of bias studies appear to have the same amount of spread in results as do medium and low risk of bias studies.
+
+In order to determine if there was an effect of publication year, we resorted the forest plot for the overall meta-analysis by publication year rather than by effect size in Figure \@ref(fig:MetaYr). Based solely on visual inspection of the forest plot, there seems to be no clear pattern in either effect size measurement or study precision over time, and so no further investigation of the potential effect of publication year was considered.
+
+Since the planned subgroup analyses provided no insight into heterogeneity in the synthesis results, several post-hoc outlier analyses were conducted. Using a basic method for outlier detection (as described previously), five studies were detected as outliers: Leon 2011, Teunis 2008, Bernstein 2015, Lindesmith 2005, and Atmar 2008. While removing these outliers has a large effect on the heterogeneity (updated $I^2 = 52\%$), we proceeded with other methods of outlier identification before making any further decisions.
 
 ```{r MetaFUT, fig.cap = "Forest plot showing the subgroup analysis stratified by whether studies controlled for FUT2 status or not. In this analysis, participants who were FUT2- were excluded in order to determine if including FUT2- participants in the study would bias the results. There appear to be few differences between the subgroups."}
 knitr::include_graphics(here::here("figures", "fut2-forest.png"))
 ```
 
-Next, we conducted a subgroup analysis using norovirus genogroup as the stratifying variable. The results are shown in Figure \@ref(fig:MetaGG). Interestingly, we notice that the studies which do not report the inoculum genogroup (Genogroup unknown) are quite homogeneous, $I^2 = 0\%$, although the summary estimate and prediction interval are wide. However, the more interesting comparison is between studies reporting a genogroup I inoculum and studies reporting a genogroup II inoculum. Among these two groups, stratifying by genogroup does not reduce heterogeneity at all compared to the overall analysis.
-
 ```{r MetaGG, fig.cap = "Forest plot showing the subgroup analysis stratified by inoculum genogroup. Interestingly the studies which failed to report a genogroup are homogeneous, but differentiating between GI and GII inocula explains little of the heterogeneity within the overall analysis."}
 knitr::include_graphics(here::here("figures", "gg-forest.png"))
 ```
-
-The final planned subgroup analysis we conducted was stratified by risk of bias (high risk of bias studies compared to low/medium risk of bias studies, which were pooled), shown in Figure \@ref(fig:MetaRob). Again, we can see a great deal of variation within both subgroups, and stratifying by risk of bias does not appear to have a noticeable effect on heterogeneity. High risk of bias studies appear to have the same amount of spread in results as do medium and low risk of bias studies.
 
 ```{r MetaRob, fig.cap = "Forest plot showing the subgroup analysis stratified by risk of bias. There are no visible differences between the high risk of bias and low/med risk of bias groups."}
 knitr::include_graphics(here::here("figures", "rob-forest.png"))
 ```
 
-In order to determine if there was an effect of publication year, we resorted the forest plot for the overall meta-analysis by publication year rather than by effect size in Figure \@ref(fig:MetaYr). Based solely on visual inspection of the forest plot, there seems to be no clear pattern in either effect size measurement or study precision over time, and so no further investigation of the potential effect of publication year was considered.
-
 ```{r MetaYr, fig.cap = "Forest plot of the overall analysis sorted by the year of publication. No patterns are immediately visible, and it appears that there is no trend between the estimated effect size and the year of publication."}
 knitr::include_graphics(here::here("figures", "all-studies-forest-yr.png"))
 ```
-
-Since the planned subgroup analyses provided no insight into heterogeneity in the synthesis results, several post-hoc outlier analyses were conducted. Using a basic method for outlier detection (as described previously), five studies were detected as outliers: Leon 2011, Teunis 2008, Bernstein 2015, Lindesmith 2005, and Atmar 2008. While removing these outliers has a large effect on the heterogeneity (updated $I^2 = 52\%$), we proceeded with other methods of outlier identification before making any further decisions.
 
 Next, we performed a leave-one-out (LOO) influence analysis. The overall effect of removing each study is shown in Figure \@ref(fig:MetaLOOI2). Removing any one study appears to have little effect on the $I^2$, indicating that removing multiple studies is likely necessary to obtain a trustworthy summary estimate. From the LOO results, a Baujat plot was created, shown in Figure \@ref(fig:Baujat). Based on the Baujat plot and LOO diagnostics (shown in the appendix), we identified three studies as outliers: Bernstein 2015, Teunis 2008, and Madore 1990. Removing these three studies slightly decreases the heterogeneity (updated $I^2 = 73\%$).
 
@@ -292,6 +303,8 @@ knitr::include_graphics(here::here("figures", "all-studies-NO.png"))
 ```
 
 Table \@ref(tab:MetaSummary) shows summary statistics of the different methods we used to examine heterogeneity.
+
+\newpage
 
 ```{r MetaSummary}
 sumdf <- data.frame(
@@ -402,6 +415,18 @@ pander::pander(sessionInfo())
 
 # Supplementary figures {-}
 
-## Leave-one-out diagnostics
+The diagnostic results for the leave-one-out analysis are shown in Figure \@ref(fig:LOODiag), the results of the three clustering algorithms applied to the GOSH data are shown along with diagnostics in Figure \@ref(fig:GOSHclust), and the GOSH distributions based on inclusion and exclusion of the identified outliers by the GOSH clustering analysis are shown in Figure \@ref(fig:GOSHdiag).
 
-## GOSH results
+```{r LOODiag, fig.cap = "Diagnostics for leave-one-out influence analysis recommended by Viechtbauer. No studies appear to be critical outliers which lie far beyond the others in any metric, so the Baujat plot was used instead to identify outliers from the LOO analysis."}
+knitr::include_graphics(here::here("figures", "all-studies-loo-influence.png"))
+```
+
+```{r GOSHclust, fig.cap = "Clusters identified by the three different algorithms recommended by Harrer. Parameters for clustering algorithms were chosen based on Harrer's recommendation to obtain a reasonable number of detected outliers."}
+knitr::include_graphics(here::here("figures", "gosh-diag-clusters.png"))
+```
+
+```{r GOSHdiag, fig.cap = "Differences in GOSH distributions for effect size and heterogeneity between random subsets which contain (blue) or do not contain (gray) a given study. Study 5 is Bernstein 2015, study 11 is Leon 2011, study 14 is Madore 1990, and study 19 is Teunis 2008. These four studies were identified as having noticeable differences in included vs. excluded distributions in the GOSH analysis based on cluster imbalance across the three algorithms. (I.e. based on which studies are over-represented in different clusters.)"}
+knitr::include_graphics(here::here("figures", "gosh-diag-outliers.png"))
+```
+
+

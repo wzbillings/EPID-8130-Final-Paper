@@ -158,25 +158,10 @@ Next let's do a leave-one-out (LOO) analysis.
 
 ```{r all studies LOO analysis}
 # LOO analysis
-all_studies_inf <- dmetar::InfluenceAnalysis(all_studies_meta, random = TRUE)
-save_base_plot(
-  all_studies_inf,
-  here::here("figures", "all-studies-loo-panel.png"),
-  plot,
-  which = "all"
-)
-save_base_plot(
-  all_studies_inf,
-  here::here("figures", "all-studies-loo-baujat.png"),
-  plot,
-  which = "baujat"
-)
-save_base_plot(
-  all_studies_inf,
-  here::here("figures", "all-studies-loo-influence.png"),
-  plot,
-  which = "influence"
-)
+# All plots are created at the same time so I have to keep repeating code
+# to individually change the text sizes (rolling eyes emoji)
+all_studies_inf <- dmetar::InfluenceAnalysis(all_studies_meta, random = TRUE,
+                                             text.scale = 1.25)
 save_base_plot(
   all_studies_inf,
   here::here("figures", "all-studies-loo-es.png"),
@@ -189,7 +174,28 @@ save_base_plot(
   plot,
   which = "I2"
 )
-knitr::include_graphics(here::here("figures", "all-studies-loo-panel.png"))
+
+all_studies_inf <- dmetar::InfluenceAnalysis(all_studies_meta, random = TRUE,
+                                             text.scale = 2.5)
+
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-baujat.png"),
+  plot,
+  which = "baujat"
+)
+
+all_studies_inf <- dmetar::InfluenceAnalysis(all_studies_meta, random = TRUE,
+                                             text.scale = 300)
+
+save_base_plot(
+  all_studies_inf,
+  here::here("figures", "all-studies-loo-influence.png"),
+  plot,
+  which = "influence",
+  w = 2000,
+  h = 2500
+)
 ```
 
 Remove studies and get forest plot.
@@ -285,7 +291,8 @@ save_base_plot(
         gmm.plot
       )
     )
-  }
+  },
+   w = 4000, h = 4500
 )
 ```
 
@@ -486,11 +493,11 @@ rob_data <- rob_data_orig %>%
   )))
 rob_data$W <- (all_studies_df$number_challenged)
 rob_summary(rob_data, tool = "ROB1", colour = "colourblind")
-ggsave(here::here("figures", "rob-summary.png"), width = 6, height = 7)
+ggsave(here::here("figures", "rob-summary.png"), width = 6.25, height = 3)
 rob_traffic_light(rob_data, tool = "ROB1", colour = "colourblind", psize = 6) +
   theme(strip.text.y.left = element_text(size = 10, angle = 0),
         axis.title.y.left = element_blank())
-ggsave(here::here("figures", "rob-traffic-light.png"), width = 6, height = 9)
+ggsave(here::here("figures", "rob-traffic-light.png"), width = 6, height = 8)
 ```
 
 Cumulative meta analysis based on year of publication.
