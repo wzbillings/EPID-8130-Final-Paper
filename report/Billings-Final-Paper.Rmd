@@ -114,7 +114,7 @@ STtable <- data.frame(
   flextable::align(j = 1, align = "right", part = "all") |>
   flextable::align(j = 2, align = "left", part = "all") |>
   flextable::set_caption("Search strings for the two databases searched.") |>
-  flextable::fontsize(size = 11, part = "all") |>
+  flextable::fontsize(size = 8, part = "all") |>
   flextable::autofit() |>
   flextable::set_table_properties(layout = "autofit")
 
@@ -138,7 +138,7 @@ From each study (only reports which included original data collection), one auth
 7. Criteria for reporting infection and illness; and
 8. For each combination of FUT2 status, dose, and other study sub-samples (e.g. vaccine vs. placebo in vaccine trials), the number of participants challenged, number of participants with confirmed infection, and the number of participants with confirmed illness.
 
-Reported inoculum strains were standardized to modern nomenclature where possible, criteria for infection and illness were standardized, and inoculum dose was converted to genome equivalent copies (1 RT-PCR unit = 400 genome equivalent copies) [@atmar2013].
+Reported inoculum strains were standardized to modern nomenclature where possible, criteria for infection and illness were standardized, and inoculum dose was converted to genome equivalent copies (1 RT-PCR unit = 400 genome equivalent copies) [@atmar2014].
 
 ## Study quality assessment
 
@@ -148,7 +148,7 @@ Study quality was assessed using a modification of the JBI critical appraisal to
 
 We fit an overall meta-analysis model for the proportion of infected individuals (proportion infected) by pooling together all subgroups reported within each study. We used a generalized linear mixed-effected modeling approach with logit-transformed proportions (log-odds) as the outcome [@stijnen2010; @harrer2021]. The method of maximum likelihood was used to estimate $\tau^2$ (between-study heterogeneity). Confidence intervals for pooled effects were calculated using the Knapp-Hartung adjustment [@knapp2003; @sidik2002], which is typically sensible [@harrer2021; @inthout2014; @langan2019]. The GLMM method with log-odds as the outcome has been previously recommended in the literature for the meta-analysis of proportions [@schwarzer2019]. When using a GLMM approach, no weights are estimated for each study, and $\tau^2$ (the estimate of between-study heterogeneity) can only be estimated through the method of maximum likehood, and a confidence interval for $\tau^2$ cannot be obtained [@harrer2021].
 
-*A priori* subgroup analyses were conducted to examine the effect of study risk of bias (high risk of bias vs. other studies), norovirus genogroup (GI, GII, or unknown), and whether FUT2 was controlled for in the study. For subgroup analyses, we use the so-called "fixed-effects (plural)" model with the $Q$-test for between-subgroup differences [@harrer2021; @borenstein2009; @borenstein2013]. Estimated between-study heterogeneity ($\tau^2$) was assumed to be different for all subgroups, and models within-subgroups were fit used the random-effects GLMM method as previously described.
+*A priori* subgroup analyses were conducted to examine the effect of study risk of bias (high risk of bias vs. other studies), norovirus genogroup (GI, GII, or unknown), and whether FUT2 was controlled for in the study. For subgroup analyses, we use the so-called "fixed-effects (plural)" model for between-subgroup differences [@harrer2021; @borenstein2009; @borenstein2013]. Estimated between-study heterogeneity ($\tau^2$) was assumed to be different for all subgroups, and models within-subgroups were fit used the random-effects GLMM method as previously described. Differences between subgroups were assessed visually and using differences in $I^2$ rather than by conducting any formal statistical test. The effect of year of publication was examined visually, rather than by conducting any additional analyses.
 
 Influence of individual studies on the overall result was analyzed *post-hoc* using three methods. First, we used a simple method which classifies studies as outliers if the estimate confidence interval for the individual study does not overlap with the confidence interval for the pooled estimate [@harrer2021]. Second, we used a leave-one-out approach and manually identified outliers using a Baujat plot [@baujat2002] and diagnostics [@viechtbauer2010]. Third, we used the GOSH (Graphical display Of Study Heterogeneity) method, wherein we fit 1,000,000 models with random subsets of studies included. Then, we plotted the estimated heterogeneity vs. the estimated effect size of all random subset analyses [@olkin2012]. From the GOSH results, we applied three unsupervised clustering algorithms: $k$-means [@hartigan1979], DBSCAN [@schubert2017], and Gaussian mixture modeling [@fraley2002]. Study over-representation within clusters is used to determine which studies have an undue effect on heterogeneity [@harrer2021]. Overall, outliers were detected by consensus--if any two of the three methods flagged a particular study, that study was designated as an outlier.
 
@@ -166,21 +166,21 @@ All analyses were conducted using R version 4.1.1 [@R-base]. The packages `meta`
 
 ## Identification of studies
 
-Overall, 5301 non-duplicate records were obtained from searching PubMed and Web of Science. After reviewing the titles and abstracts of records, 98 reports were sought for retrieval. Of those, two reports could not be obtained, and so 96 reports were retrieved for full-text review. After applying the eligibility criteria, we selected 65 reports for inclusion in the study (CITE THESE). The PRISMA diagram for study inclusion is shown in Figure \@ref(fig:PRISMA).
+Overall, 5301 non-duplicate records were obtained from searching PubMed and Web of Science. After reviewing the titles and abstracts of records, 98 reports were sought for retrieval. Of those, two reports could not be obtained, and so 96 reports were retrieved for full-text review. After applying the eligibility criteria, we selected 65 reports for inclusion in the study. The PRISMA diagram for study inclusion is shown in Figure \@ref(fig:PRISMA).
 
-```{r PRISMA}
+```{r PRISMA, fig.cap = "PRISMA 2020 flow diagram showing how many records and reports were identified at each stage of the review process."}
 knitr::include_graphics(here::here("figures", "PRISMA-diagram.png"))
 ```
 
-From the list of included reports, we determined the reports which reflect original data collection by examining the methods reported in the paper. A DAG showing citations pointing to original data sources is shown in Figure \@ref(figure:DAG). In total, 20 papers reflecting original sources of data were selected for inclusion in synthesis results [@agus1973; @atmar2011; @atmar2008; @atmar2014b; @bernstein2015; @dolin1971; @frenck2012; @gordon1956; @graham1994; @keswick1985; @leon2011; @lindesmith2005; @lindesmith2003; @madore1990; @mateo2020; @okhuysen1995; @parker1994; @seitz2011; @teunis2008; @treanor1988]. Of the 65 reports, 7 appeared to reflect original sources of data, but either did not provide the results necessary for synthesis, or provided the results in a format that was not usable for data extraction [@grohmann1981; @harrington2002; @lindesmith2010; @lindesmith2019; @liu2013; @moe2004; @parker1993].
+From the list of included reports, we determined the reports which reflect original data collection by examining the methods reported in the paper. A DAG showing citations pointing to original data sources is shown in Figure \@ref(fig:DAG). In total, 20 papers reflecting original sources of data were selected for inclusion in synthesis results [@agus1973; @atmar2011; @atmar2008; @atmar2014; @bernstein2015; @dolin1971; @frenck2012; @gordon1956; @graham1994; @keswick1985; @leon2011; @lindesmith2005; @lindesmith2003; @madore1990; @mateo2020; @okhuysen1995; @parker1994; @seitz2011; @teunis2008; @treanor1988]. Of the 65 reports included [@agus1973; @ajami2012; @atmar2008; @atmar2011; @atmar2014; @atmar2015; @ball1999; @bernstein2015; @brinker1998; @brinker1999; @czako2012; @czako2015; @dai2015; @dolin1971; @erdman1989; @erdman1989a; @frenck2012; @gary1987; @gordon1956; @graham1994; @gray1994; @griffin2015; @grohmann1981; @harrington2002; @hesse2016; @hutson2002; @hutson2005; @jiang1992; @jiang1995; @kavanagh2011; @keswick1985; @kirby2014; @kirby2016; @kirby2020; @leon2011; @lindesmith2003; @lindesmith2005; @lindesmith2010; @lindesmith2015; @lindesmith2019; @liu2013; @liu2021; @lobue2006; @madore1990; @mateo2020; @messner2014; @moe2004; @newman2015; @newman2015a; @newman2016; @okhuysen1995; @parker1993; @parker1994; @patin2020; @ramani2015; @ramani2017; @reeck2010; @seitz2011; @swanstrom2014; @teunis2008; @teunis2020; @treanor1988; @treanor1993; @williams2019; @wyatt1974], 7 appeared to reflect original sources of data, but either did not provide the results necessary for synthesis, or provided the results in a format that was not usable for data extraction [@grohmann1981; @harrington2002; @lindesmith2010; @lindesmith2019; @liu2013; @moe2004; @parker1993].
 
-```{r DAG}
+```{r DAG, fig.cap = "DAG showing citations which indicated the terminal study as the source of the data. The end notes colored in green are the reports which were identified as original data collection studies."}
 knitr::include_graphics(here::here("figures", "papers-dag.png"))
 ```
 
 ## Study characteristics
 
-The abstracted study characteristics for the 20 included papers are shown in Table \@ref(tab:SummaryCharacteristics). The earliest study was conducted in 1956, and the most recent study was conducted in 2020, with 15/20 of the studies conducted in 1990 or later, and 11/20 of the studies conducted in 2000 or later. Most studies (15/20) reported information on the age range of participants, and all studies only included adults, as expected for challenge studies. The three oldest studies only included male subjects, but later studies tended to include an equal balance of male and female participants, where reported. Racial diversity in cohorts was reported in less than half of the included studies, and varied significantly by study. Half of the included studies (10/20) either reported results stratified by FUT2 (secretor) genotype or only recruited participants with FUT2+ genotype. Three studies only included participants with A or O blood types. Only one study (Frenck 2012) reported low pre-challenge titer as an eligibility criterion for subject recruitment. Note that the two oldest studies recruited participants at least partially from incarcerated populations--while the studies claim that the subjects are volunteers, neither study reports methods for preventing coercive recruiting, nor mentions how incarcerated subjects were compensated. These studies likely fail to meet modern ethical guidelines, but we chose to include the data in our synthesis in the hopes that some good can come out of past scientific misconduct.
+The abstracted study characteristics for the 20 included papers are shown in Table \@ref(tab:StudyCharacteristics). The earliest study was conducted in 1956, and the most recent study was conducted in 2020, with 15/20 of the studies conducted in 1990 or later, and 11/20 of the studies conducted in 2000 or later. Most studies (15/20) reported information on the age range of participants, and all studies only included adults, as expected for challenge studies. The three oldest studies only included male subjects, but later studies tended to include an equal balance of male and female participants, where reported. Racial diversity in cohorts was reported in less than half of the included studies, and varied significantly by study. Half of the included studies (10/20) either reported results stratified by FUT2 (secretor) genotype or only recruited participants with FUT2+ genotype. Three studies only included participants with A or O blood types. Only one study (Frenck 2012) reported low pre-challenge titer as an eligibility criterion for subject recruitment. Note that the two oldest studies recruited participants at least partially from incarcerated populations--while the studies claim that the subjects are volunteers, neither study reports methods for preventing coercive recruiting, nor mentions how incarcerated subjects were compensated. These studies likely fail to meet modern ethical guidelines, but we chose to include the data in our synthesis in the hopes that some good can come out of past scientific misconduct.
 
 ```{r StudyCharacteristics}
 scdat <- read.csv(here::here("data", "study-characteristics.csv"), nrows = 20)
@@ -198,40 +198,139 @@ scdat %>%
   flextable::set_header_labels(
     male = "% male",
     white = "% white",
-    `fut2 control` = "FUT2 control",
+    `fut2 control` = "FUT2",
     `ro b` = "RoB"
   ) %>%
   flextable::theme_booktabs(bold_header = TRUE) %>%
   flextable::align(align = "left", part = "all") %>%
   flextable::set_caption("Abstracted demographic information and other study characteristics for the 20 unique original data collection studies which were identified.") %>%
   flextable::footnote(
-    i = 1, j = 2:3, part = "header",
-    value = flextable::as_paragraph(c("Sample size", "Number of events"))
+    i = 1, j = c(2,3,9), part = "header",
+    value = flextable::as_paragraph(c("Sample size", "Number of events",
+                                      "Whether subject FUT2 genotype status was measured"))
   ) %>%
-  flextable::fontsize(size = 11, part = "all") %>%
+  flextable::fontsize(size = 10, part = "all") %>%
   flextable::autofit() %>%
   flextable::set_table_properties(layout = "autofit")
 ```
 
 The majority of the studies (11/20) were judged to be at high risk of bias. A summary plot of the risk of bias for the included studies is shown in Figure \@ref(fig:RoBSummary). The most common issue was whether the recruited participants were from the same underlying cohort (or if the study stratified results by cohort) and whether inclusion criteria were clearly reported. Note that there are no high risk of bias studies which were conducted after 2010--many older studies lacked the same standardized reporting which is now commonplace, and so have a higher risk of bias. Furthermore, older reports often tended to report the results of multiple challenge studies simultaneously, without stratifying results by cohort. Risk of bias domain assessments for each study are shown in Figure \@ref(fig:Stoplight).
 
-```{r RobSummary}
+```{r RoBSummary, fig.cap = "Summary risk of bias estimates for each domain across the entire set of included studies. Percentages are weighted by study size."}
 knitr::include_graphics(here::here("figures", "rob-summary.png"))
 ```
 
-```{r Stoplight}
+```{r Stoplight, fig.cap = "Individual risk of bias assessments in each domain for all included studies."}
 knitr::include_graphics(here::here("figures", "rob-traffic-light.png"))
 ```
 
 ## Meta-analysis
 
-(OVERALL)
+```{r MetaOverall, fig.cap = "Forest plot showing estimates for individual studies, along with the random-effects summary estimate."}
+knitr::include_graphics(here::here("figures", "all-studies-forest.png"))
+```
 
-(SUBGROUPS)
+Estimates of the estimated proportion and 95% confidence interval for each study, along with the estimated random-effects summary estimate are shown in Figure \@ref(fig:MetaOverall). Individual point estimates for each study range from 0.36 to 1.00, with 95% confidence limits ranging from 0.22 at the lowest to 1.00 at the highest. The heterogeneity among studies is extremely high, estimated at $I^2 = 80\%$, and the 95% prediction interval indicates a low level of precision in the summary estimate. The summary estimate is unlikely to be trustworthy due to the high degree of heterogeneity present.
 
-(INFLUENCE)
+In order to examine the heterogeneity between studies, we examined several *a priori* subgroup analyses. The first subgroup analysis we considered was the effect of stratifying by FUT2 genogroup, shown in Figure \@ref(fig:MetaFUT). Stratifying by FUT2 control status minimally reduces the within-subgroup heterogeneity as well as the overall heterogeneity. For both subgroups (FUT2 not controlled and FUT2 status controlled for), the summary estimates and $I^2$ values are similar to the overall pooled measure, indicating little difference between subgroups. The 95% prediction interval for the overall effect is slightly smaller, as is the overall $I^2$ value, but controlling for FUT2 appears to explain only a slight fraction of heterogeneity in the outcome.
 
-(SUMMARY TABLE)
+```{r MetaFUT}
+knitr::include_graphics(here::here("figures", "fut2-forest.png"))
+```
+
+Next, we conducted a subgroup analysis using norovirus genogroup as the stratifying variable. The results are shown in Figure \@ref(fig:MetaGG). Interestingly, we notice that the studies which do not report the inoculum genogroup (Genogroup unknown) are quite homogeneous, $I^2 = 0\%$, although the summary estimate and prediction interval are wide. However, the more interesting comparison is between studies reporting a genogroup I inoculum and studies reporting a genogroup II inoculum. Among these two groups, stratifying by genogroup does not reduce heterogeneity at all compared to the overall analysis.
+
+```{r MetaGG}
+knitr::include_graphics(here::here("figures", "gg-forest.png"))
+```
+
+The final planned subgroup analysis we conducted was stratified by risk of bias (high risk of bias studies compared to low/medium risk of bias studies, which were pooled), shown in Figure \@ref(fig:MetaRob). Again, we can see a great deal of variation within both subgroups, and stratifying by risk of bias does not appear to have a noticeable effect on heterogeneity. High risk of bias studies appear to have the same amount of spread in results as do medium and low risk of bias studies.
+
+```{r MetaRob}
+knitr::include_graphics(here::here("figures", "rob-forest.png"))
+```
+
+In order to determine if there was an effect of publication year, we resorted the forest plot for the overall meta-analysis by publication year rather than by effect size in Figure \@ref(fig:MetaYr). Based solely on visual inspection of the forest plot, there seems to be no clear pattern in either effect size measurement or study precision over time, and so no further investigation of the potential effect of publication year was considered.
+
+```{r MetaYr}
+knitr::include_graphics(here::here("figures", "all-studies-forest-yr.png"))
+```
+
+Since the planned subgroup analyses provided no insight into heterogeneity in the synthesis results, several post-hoc outlier analyses were conducted. Using a basic method for outlier detection (as described previously), five studies were detected as outliers: Leon 2011, Teunis 2008, Bernstein 2015, Lindesmith 2005, and Atmar 2008. While removing these outliers has a large effect on the heterogeneity (updated $I^2 = 52\%$), we proceeded with other methods of outlier identification before making any further decisions.
+
+Next, we performed a leave-one-out (LOO) influence analysis. The overall effect of removing each study is shown in Figure \@ref(fig:MetaLOOI2). Removing any one study appears to have little effect on the $I^2$, indicating that removing multiple studies is likely necessary to obtain a trustworthy summary estimate. From the LOO results, a Baujat plot was created, shown in Figure \@ref(fig:Baujat). Based on the Baujat plot and LOO diagnostics (shown in the appendix), we identified three studies as outliers: Bernstein 2015, Teunis 2008, and Madore 1990. Removing these three studies slightly decreases the heterogeneity (updated $I^2 = 73\%$).
+
+```{r MetaLOOI2}
+knitr::include_graphics(here::here("figures", "all-studies-loo-i2.png"))
+```
+
+```{r Baujat}
+knitr::include_graphics(here::here("figures", "all-studies-loo-baujat.png"))
+```
+
+The final *post hoc* method for heterogeneity we considered was the GOSH method. The overall GOSH results are shown in Figure \@ref(fig:GOSH). There are a few remarkable patterns which can be observed in the GOSH plot. Notably, the majority of effect size estimates (log-odds, on the $x$-axis) fit a roughly normal distribution around a log-odds estimate of $0.5$ (corresponding to an estimated proportion infected of $0.62$), while the heterogeneity estimates of the random subset models have a skewed distribution. Most of the random subsets have a high $I^2$ estimate, around $80\%$. This indicates that attempting to deal with heterogeneity may be a fruitless pursuit, as the majority of the random subsets are quite heterogeneous. However, we can also see a number of random subset models with $I^2 = 0\%$, spread over a wide range of effect sizes. These subsets with $I^2 = 0\%$ are likely not meaningful or easy to find, however.
+
+```{r GOSH}
+knitr::include_graphics(here::here("figures", "all-studies-GOSH.png"))
+```
+
+We also used a *post hoc* clustering approach on the results of the GOSH analysis to identify outliers. Three clustering methods were applied, and the raw clustering results are shown in the appendix. The clustering methods identified four studies are potential outliers: Bernstein 2015, Leon 2011, Madore 1990, and Teunis 2008. Note that these detected outliers are the same as the LOO method, with the addition of the Leon study. Removing all four of these studies simultaneously lowers the $I^2$ estimate to $59\%$.
+
+Using a consensus of the three outlier detection methods (a study is declared an outlier if any two of the three detection methods identified it), the studies we identify as outliers are: Bernstein 2015, Leon 2011, Madore 1990, and Teunis 2008. The forest plot with these four studies excluded is shown in Figure \@ref(fig:MetaNO). The $I^2$ with the outliers removed is $59\%$, and the 95% prediction interval remains quite wide. Notably, the consensus method failed to reduce heterogeneity any better than the simple method did, and the four studies identified as outliers have no superficial similarities which were not already examined (see Table \@ref(tab:StudyCharacteristics)). 
+
+```{r MetaNO}
+knitr::include_graphics(here::here("figures", "all-studies-NO.png"))
+```
+
+Table \@ref(tab:MetaSummary) shows summary statistics of the different methods we used to examine heterogeneity.
+
+```{r MetaSummary}
+sumdf <- data.frame(
+  analysis = c("Overall", "Simple outliers", "Consensus outliers",
+               "FUT2", "Genogroup", "Risk of bias"),
+  prop = c("0.65", "0.72", "0.69", "0.69", "0.66", "0.65"),
+  CI = c("(0.56, 0.74)", "(0.64, 0.78)", "(0.60, 0.76)", "(0.61, 0.76)",
+         "(0.57, 0.75)", "(0.56, 0.74)"),
+  PI = c("(0.27, 0.90)", "(0.45, 0.89)", "(0.38, 0.88)", "(0.37, 0.90)",
+         "(0.28, 0.91)", "(0.27, 0.90)"),
+  I2 = c("80% (70%, 87%)", "49% (09%, 71%)", "59% (39% - 77%)",
+         "73% (58%, 83%)", "79% (68%, 86%)", "80% (70%, 87%)")
+)
+sumdf %>%
+  flextable::flextable() %>%
+  flextable::theme_booktabs(bold_header = TRUE) %>%
+  flextable::align(j = 1, align = "right", part = "all") %>%
+  flextable::align(j = 2:5, align = "center", part = "header") %>%
+  flextable::align(j = 2:5, align = "left", part = "body") %>%
+  flextable::set_caption("Summary estimates and heterogeneity for all synthesis analyses conducted.") %>%
+  flextable::set_header_labels("I2" = "I^2") %>%
+  flextable::footnote(
+    i = 1, j = 2:5, part = "header",
+    value = flextable::as_paragraph(
+      c("Estimated proportion from random-effects model",
+        "95% confidence interval for estimate",
+        "95% prediction interval for estimate",
+        "I^2 estimate with 95% confidence interval")
+    )
+  ) %>%
+  flextable::fontsize(size = 10, part = "all") %>%
+  flextable::autofit() %>%
+  flextable::set_table_properties(layout = "autofit")
+```
+
+Finally, we assessed publication bias to determine if small-study effects or missing literature could explain the lack of coherent synthesis results. The results are shown visually in Figure \@ref(fig:Funnel). Some patterns are noticeable by visual inspection: notably, there is a cluster of 5 studies in the upper left with relatively high sample sizes which appear to estimate lower outcomes than the other studies. There also appear to be more studies which estimate high proportions than there are studies estimating low proportions as outcomes, even though many of these studies are not significant.
+
+```{r Funnel, fig.cap = "Contour-enhanced funnel plot. Each point represents an included study. Contour shading indicates that the study result is significant at the shaded alpha level. The study in the bottom left is Atmar 2008, which estimated a proportion of 1."}
+knitr::include_graphics(here::here("figures", "contour-funnel.png"))
+```
+
+We also assessed the asymmetry of the funnel plot using Peters' test (note that Peters' test for asymmetry is based on the slope of the regression line, rather than the intercept). The estimated slope was $\hat{\beta}_1 = 0.0328$ with an approximate 95% confidence interval of $(-4.97, 26.42)$. The test was not significant at a 95% level of confidence ($t_{18} = 1.34; \ p = 0.20$). The test is also shown visually in Figure \@ref(fig:PetersFig).
+
+```{r PetersFig, fig.cap = "Visual representation of the Peters' test. The test fits a linear regression model with the estimated log-odds as the outcome and inverse sample size as the predictor, using inverse variance weighting, depicted as the size of the point. The regression line appears to have an intercept close to zero."}
+knitr::include_graphics(here::here("figures", "peters-regression.png"))
+```
+
+From the test, we cannot conclude that there is definite evidence of asymmetry. However, visual inspection of the data does suggest interesting patterns which may be unrelated to problems that cause asymmetry.
 
 # Discussion
 
@@ -241,7 +340,7 @@ knitr::include_graphics(here::here("figures", "rob-traffic-light.png"))
 
 # Other information {-}
 
-The review has not been registered and no formal protocol was prepared before the review process began. The authors wish to declare that they have no competing interests. Financial support was provided to WZB by the University of Georgia Graduate School, an entity wholly unrelated to the review.
+The review has not been registered and no formal protocol was prepared before the review process began. The authors wish to declare that they have no competing interests.
 
 All data sheets, along with cleaning and analysis code, are available on [GitHub](link), and the code at time of writing is archived on Zenodo: [doi url](link).
 

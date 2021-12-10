@@ -192,6 +192,20 @@ save_base_plot(
 knitr::include_graphics(here::here("figures", "all-studies-loo-panel.png"))
 ```
 
+Remove studies and get forest plot.
+
+```{r}
+meta_LOO <- update.meta(all_studies_meta, exclude = c(5, 15, 19))
+save_base_plot(
+  meta_LOO,
+  here::here("figures", "loo-forest.png"),
+  # I hate this solution but can't figure out a better way
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  fs.hetstat = 10
+)
+```
+
+
 This is a lot of output, and it doesn't identify any clear outliers. But based mainly on the Baujat plot (upper left hand plot), we can see that the best candidate outliers are probably Bernstein 2015, Teunis 2008, and Madore 1990. I choose Madore 1990 as a candidate outlier due to the diagnostic plots in the upper right hand plot. Based on the two LOO forest plots, none of the individual studies likely has a super strong effect, maybe a L2O analysis (or more) would be better.
 
 Good thing we can do something similar. Next I'll do a GOSH analysis, but I don't remember what that stands for. We'll fit 1,000,000 models with randomly chosen predictor subsets and plot the heterogeneity vs. effect size measurement. Due to support issues with the `metafor` package, this model is fitted using a different algorithm but the trends should be similar.
@@ -230,6 +244,8 @@ save_base_plot(
 )
 knitr::include_graphics(here::here("figures", "all-studies-GOSH.png"))
 ```
+
+
 
 There are a few interesting patterns in the GOSH analysis. Most notably, the streak of subsets which appear to have heterogeneity 0.
 
@@ -276,7 +292,19 @@ save_base_plot(
 The GOSH diagnostics appear to identify 4 outlier studies. Out of simple method, LOO analysis, and GOSH diagnostics, 5 studies were each identified by at least 2 of the methods. So we'll exclude those.
 
 ```{r}
-no_outliers <- update.meta(all_studies_meta, exclude = c(2, 5, 11, 12, 14, 19))
+meta_GOSH <- update.meta(all_studies_meta, exclude = c(5, 11, 14, 19))
+save_base_plot(
+  meta_GOSH,
+  here::here("figures", "gosh-forest.png"),
+  # I hate this solution but can't figure out a better way
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  fs.hetstat = 10
+)
+```
+
+
+```{r}
+no_outliers <- update.meta(all_studies_meta, exclude = c(5, 11, 14, 19))
 save_base_plot(
   no_outliers,
   here::here("figures", "all-studies-NO.png"),
