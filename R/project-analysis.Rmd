@@ -276,11 +276,12 @@ save_base_plot(
 The GOSH diagnostics appear to identify 4 outlier studies. Out of simple method, LOO analysis, and GOSH diagnostics, 5 studies were each identified by at least 2 of the methods. So we'll exclude those.
 
 ```{r}
-no_outliers <- update.meta(all_studies_meta, exclude = c(5, 11, 12, 14, 19))
+no_outliers <- update.meta(all_studies_meta, exclude = c(2, 5, 11, 12, 14, 19))
 save_base_plot(
   no_outliers,
   here::here("figures", "all-studies-NO.png"),
-  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)}
+  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
+  fs.hetstat = 10
 )
 no_outliers
 knitr::include_graphics(here::here("figures", "all-studies-NO.png"))
@@ -309,6 +310,7 @@ fut2_meta <- fut2_df %>%
     method = "GLMM",
     sm = "PLOGIT",
     method.tau = "ML",
+    fixed = FALSE,
     hakn = TRUE,
     prediction = TRUE,
     title = "Proportion infected by FUT2 control",
@@ -319,14 +321,15 @@ save_base_plot(
   fut2_meta,
   here::here("figures", "fut2-forest.png"),
   FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
-  h = 2400
+  h = 2400,
+  fs.hetstat = 10
 )
 ```
 
-Subgroup analysis for genogroup.
+Subgroup analysis for genotype.
 
 ```{r}
-gg_df <- dat %>%
+gt_df <- dat %>%
   group_by(study, genotype = genogroup) %>%
   summarize(
     across(starts_with("number"), sum),
@@ -334,7 +337,7 @@ gg_df <- dat %>%
     .groups = "drop"
   )
 
-gg_meta <- gg_df %>%
+gt_meta <- gt_df %>%
   meta::metaprop(
     event = number_infected,
     n = number_challenged,
@@ -343,24 +346,26 @@ gg_meta <- gg_df %>%
     method = "GLMM",
     sm = "PLOGIT",
     method.tau = "ML",
+    fixed = FALSE,
     hakn = TRUE,
     prediction = TRUE,
-    title = "Proportion infected by FUT2 control",
+    title = "Proportion infected by inoculum genotype",
     subgroup = genotype
   )
 
 save_base_plot(
-  gg_meta,
-  here::here("figures", "gg-forest.png"),
+  gt_meta,
+  here::here("figures", "gt-forest.png"),
   FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
-  h = 3200
+  h = 3200,
+  fs.hetstat = 10
 )
 ```
 
-Subgroup analysis for genogroup big part.
+Not enough info, so stratify by genogroup instead.
 
 ```{r}
-gg2_df <- dat %>%
+gg_df <- dat %>%
   mutate(
     genogroup = case_when(
       genogroup == "Unknown" ~ "Unknown",
@@ -376,12 +381,13 @@ gg2_df <- dat %>%
     .groups = "drop"
   )
 
-gg2_meta <- gg2_df %>%
+gg_meta <- gg_df %>%
   meta::metaprop(
     event = number_infected,
     n = number_challenged,
     studlab = study,
     data = .,
+    fixed = FALSE,
     method = "GLMM",
     sm = "PLOGIT",
     method.tau = "ML",
@@ -391,84 +397,55 @@ gg2_meta <- gg2_df %>%
   )
 
 save_base_plot(
-  gg2_meta,
-  here::here("figures", "gg2-forest.png"),
+  gg_meta,
+  here::here("figures", "gg-forest.png"),
   FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
-  h = 2800
+  h = 2800,
+  fs.hetstat = 10
 )
 ```
 
-RIsk of bias with all three groups
-
-```{r all studies overall}
-rob1_df <- dat %>%
-  group_by(study, risk_of_bias) %>%
-  summarize(
-    across(starts_with("number"), sum),
-    year = min(year_published),
-    .groups = "drop"
-  )
-
-rob1_meta <- rob1_df %>%
-  meta::metaprop(
-    event = number_infected,
-    n = number_challenged,
-    studlab = study,
-    data = .,
-    method = "GLMM",
-    sm = "PLOGIT",
-    method.tau = "ML",
-    hakn = TRUE,
-    prediction = TRUE,
-    subgroup = risk_of_bias
-  )
-
-save_base_plot(
-  rob1_meta,
-  here::here("figures", "rob1-forest.png"),
-  FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
-  h = 2800
-)
-```
+Risk of bias (low vs med/high).
 
 ```{r}
-rob2_df <- dat %>%
+rob_df <- dat %>%
   mutate(
-    high_rob = (risk_of_bias == "H")
+    RoB = ifelse(risk_of_bias == "H", "High", "Med/Low")
   ) %>%
-  group_by(study, high_rob) %>%
+  group_by(study, RoB) %>%
   summarize(
     across(starts_with("number"), sum),
     year = min(year_published),
     .groups = "drop"
   )
 
-rob2_meta <- rob2_df %>%
+rob_meta <- rob_df %>%
   meta::metaprop(
     event = number_infected,
     n = number_challenged,
     studlab = study,
     data = .,
+    fixed = FALSE,
     method = "GLMM",
     sm = "PLOGIT",
     method.tau = "ML",
     hakn = TRUE,
     prediction = TRUE,
-    subgroup = high_rob
+    subgroup = RoB
   )
 
 save_base_plot(
-  rob2_meta,
-  here::here("figures", "rob2-forest.png"),
+  rob_meta,
+  here::here("figures", "rob-forest.png"),
   FUN = function(x, ...) {meta::forest.meta(x, sortvar = TE, ...)},
-  h = 2800
+  h = 2800,
+  fs.hetstat = 10
 )
 ```
 
 risk of bias plot.
 
 ```{r}
-library(robvis)
 rob_data_orig <- read.csv(here::here("data", "study-quality.csv"))
 rob_data <- rob_data_orig %>%
   select(-EndNote.record..) %>%
@@ -481,14 +458,12 @@ rob_data <- rob_data_orig %>%
   )))
 rob_data$W <- (all_studies_df$number_challenged)
 rob_summary(rob_data, tool = "ROB1", colour = "colourblind")
-ggsave(here::here("figures", "rob-summary.png"), width = 8, height = 9)
+ggsave(here::here("figures", "rob-summary.png"), width = 6, height = 7)
 rob_traffic_light(rob_data, tool = "ROB1", colour = "colourblind", psize = 6) +
   theme(strip.text.y.left = element_text(size = 10, angle = 0),
         axis.title.y.left = element_blank())
-ggsave(here::here("figures", "rob-traffic-light.png"), width = 8, height = 9)
+ggsave(here::here("figures", "rob-traffic-light.png"), width = 6, height = 9)
 ```
-
-
 
 Cumulative meta analysis based on year of publication.
 
@@ -499,7 +474,8 @@ save_base_plot(
   year_cum,
   here::here("figures", "cumulative-forest.png"),
   FUN = function(x, ...) {meta::forest.meta(x, ...)},
-  h = 2800
+  h = 2800,
+  fs.hetstat = 10
 )
 ```
 
@@ -535,20 +511,33 @@ meta_dose <- dat_dose %>%
     sm = "PLOGIT",
     method.tau = "ML",
     hakn = TRUE,
+    fixed = FALSE,
     prediction = TRUE,
     title = "Proportion of challenge participants by dose"
   )
 
 dose_reg <- metareg(meta_dose, ~log_dose)
-bubble(dose_reg)
-points(xs, ys, cex = ws)
-save_base_plot(
-  dose_reg,
-  here::here("figures", "cumulative-forest.png"),
-  FUN = function(x, ...) {
-    
-  },
-)
+
+pth <- here::here("figures", "meta-reg.png")
+pal <- hcl.colors(n = length(unique(dat_dose_es$study)),
+                  palette = "Dark 2")
+# Create graphics device
+png(file = pth, width = 3200, height = 1800, res = 300)
+# Actually generate forest plot
+plot(x = dat_dose_es$log_dose,
+     y = exp(dat_dose_es$yi) / (1 + exp(dat_dose_es$yi)),
+     col = pal[dat_dose_es$study |> as.factor() |> as.integer()],
+     xlab = "log dose",
+     ylab = "proportion infected")
+curve(exp(coef(dose_reg)[[1]] + coef(dose_reg)[[2]] * x) /
+        (1+exp(coef(dose_reg)[[1]] + coef(dose_reg)[[2]] * x)),
+      from = 0, to = 12, n = 10000, add = TRUE)
+# Turn off graphics device (quietly)
+zlib::quiet(dev.off())
+# Trim whitespace
+magick::image_read(pth) |>
+  magick::image_trim() |>
+  magick::image_write(path = pth)
 ```
 
 Publication bias
@@ -569,6 +558,26 @@ save_base_plot(
 ```
 
 ```{r}
-egger <- metabias(all_studies_meta, method.bias = "peters")
+peters <- metabias(all_studies_meta, method.bias = "peters")
+save_base_plot(
+  all_studies_meta,
+  here::here("figures", "peters-regression.png"),
+  FUN = function(x) {
+    with(x, {
+      plot(
+        x = 1 / all_studies_meta$n,
+        y = all_studies_meta$TE,
+        cex = 1 / sqrt(1/event + 1/(n - event)),
+        xlab = "inverse sample size",
+        ylab = "estimated log odds"
+      )
+      abline(a = peters$estimate["intercept"],
+             b = peters$estimate["bias"],
+             lty = 2)
+    }
+    )
+  }
+)
+
 ```
 
