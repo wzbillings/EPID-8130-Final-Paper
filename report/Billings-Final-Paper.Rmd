@@ -11,7 +11,6 @@ institute:
   - one: Department of Epidemiology and Biostatistics, College of Public Health, University of Georgia
   - two: Department of Environmental Health, College of Public Health, University of Georgia
 date: "2021-12-13"
-site: bookdown::bookdown_site
 output:
   bookdown::word_document2: 
     toc: false
@@ -25,7 +24,7 @@ bibliography:
   - "r-refs.bib"
 csl: jama.csl
 abstract: |
-  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. A low infectious viral load, high environmental persistence, potential for aerosolization, and long-term induction of viral shedding work in tandem to make norovirus extremely transmissible. However, norovirus outbreaks are often self-limiting, and the wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We find a high degree of heterogeneity among studies, which is somewhat explained by outliers, and not explained by any abstracted covariates. Our results suggest that either proportion of infected individuals in a norovirus challenge study is naturally heterogeneous, or is influenced primarily by unmeasured covariates. As potential infection rates may be dependent on several characteristics of research protocols, norovirus inoculum, research staff, and study participants, our results seem reasonable.
+  Human norovirus is the most common cause of acute gastroenteritis and food-borne illness in the United States. Norovirus is spread primarily by the fecal-oral route and is highly transmissible, but norovirus outbreaks are often self-limiting. The wide variety of potential routes of exposure make estimates of transmissibility from outbreak data somewhat unreliable. In contrast, human challenge studies involve a controlled inoculation, where experimental settings and route of transmission can be controlled, among other factors. In this way, norovirus challenge studies fill a unique niche in the literature and provide rich data for studying norovirus infection. However, there is no consensus on how many norovirus challenge studies have been conducted in the past, or what data were collected. We conducted a systematic review of the literature in order to find all studies which report using norovirus challenge data, and from these studies, we abstract data to obtain unique challenge cohort data. From unique cohorts, we conduct a meta-analysis of the proportion of individuals infected during each study, including subgroup analyses by study risk of bias, inoculum genogroup, and FUT2 participant genotype control. We find a high degree of heterogeneity among studies, which is somewhat explained by outliers, and not explained by any abstracted covariates. Our results suggest that either proportion of infected individuals in a norovirus challenge study is naturally heterogeneous, or is influenced primarily by unmeasured covariates. As potential infection rates may be dependent on several characteristics of research protocols, norovirus inoculum, research staff, and study participants, our results seem reasonable.
 editor_options: 
   chunk_output_type: console
 ---
@@ -63,11 +62,21 @@ library(dplyr)
 knitr::write_bib(file = "r-refs.bib")
 ```
 
+Word count:
+
+Number of tables:
+
+Number of figures:
+
 \newpage
 
 # Introduction
 
-Human norovirus (NoV) is a small, round-structured, unenveloped, positive-sense single-strand RNA virus with a linear, unsegmented genome, belonging to the caliciviridae family [CITE THIS]. NoV was first isolated in .
+Human norovirus (NoV) is a small, round-structured, unenveloped, positive-sense single-strand RNA virus with a linear, unsegmented genome, belonging to the caliciviridae family [CITE THIS]. NoV was first isolated in YEAR (CITE THIS), and has been a constant annoyance since then. In the United Status, NoV is responsible for over 50\% of foodborne illnesses, and is the most common single cause of gastroenteritis (CITE THIS). Norovirus is spread via the fecal-oral and vomit oral routes (CITE THIS), and a combination of low infectious viral load, potential for aerosolization, and environmental persistence can make norovirus highly transmissible. 
+
+Most norovirus outbreaks are self-limiting, and transmission to an individual can be highly variable due to the number of possible routes of exposure. Study of norovirus transmission is further complicated by differences in virulence between genotypes (CITE THIS) and heterogeneous host immune and genetic profiles (CITE THIS). Based on these factors, estimates of transmissibility and infectivity can often be variable by outbreak. However, human challenge studies offer a controlled setting where viral properties of NoV can be examined. During a challenege study, healthy individuals are administered live norovirus after which subjects are closely monitored for the duration of inducted illness. Such challenge studies provide the opportunity to control factors like inoculum strain, inoculum dose, and participant histo-blood group. Recall bias is also less likely to influence the result of challenge studies. Thus, using challenge studies to explore norovirus infectivity is less prone to bias than challenge studies, even if the results are not always generalizable to natural outbreaks.
+
+
 
 # Methods
 
@@ -180,7 +189,7 @@ knitr::include_graphics(here::here("figures", "papers-dag.png"))
 
 ## Study characteristics
 
-The abstracted study characteristics for the 20 included papers are shown in Table \@ref(tab:StudyCharacteristics). The earliest study was conducted in 1956, and the most recent study was conducted in 2020, with 15/20 of the studies conducted in 1990 or later, and 11/20 of the studies conducted in 2000 or later. Most studies (15/20) reported information on the age range of participants, and all studies only included adults, as expected for challenge studies. The three oldest studies only included male subjects, but later studies tended to include an equal balance of male and female participants, where reported. Racial diversity in cohorts was reported in less than half of the included studies, and varied significantly by study. Half of the included studies (10/20) either reported results stratified by FUT2 (secretor) genotype or only recruited participants with FUT2+ genotype. Three studies only included participants with A or O blood types. Only one study (Frenck 2012) reported low pre-challenge titer as an eligibility criterion for subject recruitment. Note that the two oldest studies recruited participants at least partially from incarcerated populations--while the studies claim that the subjects are volunteers, neither study reports methods for preventing coercive recruiting, nor mentions how incarcerated subjects were compensated. These studies likely fail to meet modern ethical guidelines, but we chose to include the data in our synthesis in the hopes that some good can come out of past scientific misconduct.
+The abstracted study characteristics for the 20 included papers are shown in Table \@ref(tab:StudyCharacteristics). The earliest study was conducted in 1956, and the most recent study was conducted in 2020, with 15/20 of the studies conducted in 1990 or later, and 11/20 of the studies conducted in 2000 or later. All studies were conducted in the United States, in at least 8 different states. Most studies (15/20) reported information on the age range of participants, and all studies only included adults, as expected for challenge studies. The three oldest studies only included male subjects, but later studies tended to include an equal balance of male and female participants, where reported. Racial diversity in cohorts was reported in less than half of the included studies, and varied significantly by study. Half of the included studies (10/20) either reported results stratified by FUT2 (secretor) genotype or only recruited participants with FUT2+ genotype. Three studies only included participants with A or O blood types. Only one study (Frenck 2012) reported low pre-challenge titer as an eligibility criterion for subject recruitment. Note that the two oldest studies recruited participants at least partially from incarcerated populations--while the studies claim that the subjects are volunteers, neither study reports methods for preventing coercive recruiting, nor mentions how incarcerated subjects were compensated. These studies likely fail to meet modern ethical guidelines, but we chose to include the data in our synthesis in the hopes that some good can come out of past scientific misconduct.
 
 ```{r StudyCharacteristics}
 scdat <- read.csv(here::here("data", "study-characteristics.csv"), nrows = 20)
